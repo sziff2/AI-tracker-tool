@@ -27,18 +27,48 @@ REVIEW_THRESHOLD = 0.8  # confidence below this → review queue
 # KPI extraction
 # ─────────────────────────────────────────────────────────────────
 
+def _chunk_text(text: str, max_chars: int = 15000) -> list[str]:
+    """Split text into chunks that fit within prompt limits."""
+    if len(text) <= max_chars:
+        return [text]
+    chunks = []
+    lines = text.split("\n")
+    current = []
+    current_len = 0
+    for line in lines:
+        if current_len + len(line) > max_chars and current:
+            chunks.append("\n".join(current))
+            current = []
+            current_len = 0
+        current.append(line)
+        current_len += len(line)
+    if current:
+        chunks.append("\n".join(current))
+    return chunks
+
+
 async def extract_metrics(db: AsyncSession, document: Document, text: str) -> list[ExtractedMetric]:
     """
     Run the KPI extraction prompt against the document text,
     persist results, and flag low-confidence items.
+    Splits long documents into chunks.
     """
-    prompt = KPI_EXTRACTOR.format(text=text)
-    raw_items = call_llm_json(prompt)
-    if not isinstance(raw_items, list):
-        raw_items = [raw_items]
+    chunks = _chunk_text(text)
+    all_raw_items = []
+
+    for chunk in chunks:
+        prompt = KPI_EXTRACTOR.format(text=chunk)
+        try:
+            raw_items = call_llm_json(prompt, max_tokens=8192)
+            if not isinstance(raw_items, list):
+                raw_items = [raw_items]
+            all_raw_items.extend(raw_items)
+        except Exception as e:
+            logger.warning("KPI extraction failed for chunk: %s", str(e)[:200])
+            continue
 
     metrics: list[ExtractedMetric] = []
-    for item in raw_items:
+    for item in all_raw_items:
         kpi = ExtractedKPI(**item)
         needs_review = kpi.confidence < REVIEW_THRESHOLD
 
@@ -85,13 +115,22 @@ async def extract_guidance(db: AsyncSession, document: Document, text: str) -> l
     Returns parsed items (not persisted as separate table in MVP —
     stored alongside metrics with segment='guidance').
     """
-    prompt = GUIDANCE_EXTRACTOR.format(text=text)
-    raw_items = call_llm_json(prompt)
-    if not isinstance(raw_items, list):
-        raw_items = [raw_items]
+    chunks = _chunk_text(text)
+    all_raw_items = []
+
+    for chunk in chunks:
+        prompt = GUIDANCE_EXTRACTOR.format(text=chunk)
+        try:
+            raw_items = call_llm_json(prompt, max_tokens=8192)
+            if not isinstance(raw_items, list):
+                raw_items = [raw_items]
+            all_raw_items.extend(raw_items)
+        except Exception as e:
+            logger.warning("Guidance extraction failed for chunk: %s", str(e)[:200])
+            continue
 
     guidance_records = []
-    for item in raw_items:
+    for item in all_raw_items:
         gi = GuidanceItem(**item)
         metric = ExtractedMetric(
             id=uuid.uuid4(),
