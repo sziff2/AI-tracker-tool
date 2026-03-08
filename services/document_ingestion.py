@@ -54,6 +54,7 @@ async def ingest_document(
 ) -> Document:
     """
     Copy uploaded file to storage, create a Document record, and return it.
+    Also stores file bytes in DB so they survive Railway redeploys.
     Raises ValueError on duplicate checksum.
     """
     cs = _checksum(file_path)
@@ -62,6 +63,10 @@ async def ingest_document(
     existing = await db.execute(select(Document).where(Document.checksum == cs))
     if existing.scalar_one_or_none():
         raise ValueError(f"Duplicate document (checksum {cs[:12]}…)")
+
+    # ── Read file bytes ──────────────────────────────────────────
+    with open(file_path, "rb") as f:
+        file_bytes = f.read()
 
     # ── Copy to structured storage ───────────────────────────────
     dest_dir = _storage_dir(ticker, period_label)
@@ -80,6 +85,7 @@ async def ingest_document(
         source_url=source_url,
         published_at=published_at or datetime.now(timezone.utc),
         file_path=str(dest_path),
+        file_content=file_bytes,
         checksum=cs,
         parsing_status="pending",
     )
