@@ -1,0 +1,58 @@
+"""
+Investment Research CoWork Agent — FastAPI application entry point.
+
+Start with:
+    uvicorn apps.api.main:app --reload
+"""
+
+from contextlib import asynccontextmanager
+
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
+from apps.api.database import async_engine, Base
+from apps.api.routes import (
+    companies_router,
+    documents_router,
+    outputs_router,
+    review_router,
+)
+from configs.settings import settings
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Create tables on startup (dev convenience). Use Alembic in prod."""
+    async with async_engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+    yield
+    await async_engine.dispose()
+
+
+app = FastAPI(
+    title=settings.app_name,
+    version=settings.app_version,
+    lifespan=lifespan,
+)
+
+# ── CORS (adjust in production) ─────────────────────────────────
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# ── Route registration ──────────────────────────────────────────
+PREFIX = settings.api_prefix
+
+app.include_router(companies_router, prefix=PREFIX)
+app.include_router(documents_router, prefix=PREFIX)
+app.include_router(outputs_router, prefix=PREFIX)
+app.include_router(review_router, prefix=PREFIX)
+
+
+@app.get("/health")
+async def health():
+    return {"status": "ok", "version": settings.app_version}
