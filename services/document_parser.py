@@ -76,7 +76,7 @@ def classify_document(text_preview: str) -> ClassifiedDocument:
 # Full processing pipeline
 # ─────────────────────────────────────────────────────────────────
 
-async def process_document(db: AsyncSession, document: Document) -> dict:
+async def process_document(db: AsyncSession, document: Document, ticker: str = "UNKNOWN") -> dict:
     """
     End-to-end processing of a single document:
       1. Extract text + tables
@@ -117,7 +117,6 @@ async def process_document(db: AsyncSession, document: Document) -> dict:
         db.add(section)
 
     # 4. Write processed JSON files
-    ticker = document.company.ticker if document.company else "UNKNOWN"
     proc_dir = Path(settings.storage_base_path) / "processed" / ticker / (document.period_label or "misc")
     proc_dir.mkdir(parents=True, exist_ok=True)
 
