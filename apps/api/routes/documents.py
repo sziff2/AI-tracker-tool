@@ -7,11 +7,11 @@ from pathlib import Path
 from tempfile import NamedTemporaryFile
 
 from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
-from sqlalchemy import select
+from sqlalchemy import delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from apps.api.database import get_db
-from apps.api.models import Company, Document
+from apps.api.models import Company, Document, DocumentSection, ExtractedMetric, EventAssessment, ReviewQueueItem
 from schemas import DocumentCreate, DocumentOut
 from services.document_ingestion import ingest_document
 from services.document_parser import process_document
@@ -102,6 +102,16 @@ async def process_doc(document_id: uuid.UUID, db: AsyncSession = Depends(get_db)
     company_result = await db.execute(select(Company).where(Company.id == doc.company_id))
     company = company_result.scalar_one_or_none()
     ticker = company.ticker if company else "UNKNOWN"
+
+    # Restore file from DB if missing on disk (Railway redeploys wipe filesystem)
+    file_path = Path(doc.file_path)
+    if not file_path.exists() and doc.file_content:
+        file_path.parent.mkdir(parents=True, exist_ok=True)
+        file_path.write_bytes(doc.file_content)
+
+    if not file_path.exists():
+        raise HTTPException(400, "File not found on disk and no content stored in DB. Please re-upload.")
+
     summary = await process_document(db, doc, ticker=ticker)
     return summary
 
@@ -158,3 +168,47 @@ async def compare_doc(document_id: uuid.UUID, db: AsyncSession = Depends(get_db)
         raise HTTPException(400, str(exc))
 
     return comparison.model_dump()
+
+
+# ─────────────────────────────────────────────────────────────────
+# Delete a single document
+# ─────────────────────────────────────────────────────────────────
+@router.delete("/documents/{document_id}")
+async def delete_document(document_id: uuid.UUID, db: AsyncSession = Depends(get_db)):
+    result = await db.execute(select(Document).where(Document.id == document_id))
+    doc = result.scalar_one_or_none()
+    if not doc:
+        raise HTTPException(404, "Document not found")
+
+    # Delete related records first
+    await db.execute(delete(ReviewQueueItem).where(ReviewQueueItem.entity_id == document_id))
+    await db.execute(delete(EventAssessment).where(EventAssessment.document_id == document_id))
+    await db.execute(delete(ExtractedMetric).where(ExtractedMetric.document_id == document_id))
+    await db.execute(delete(DocumentSection).where(DocumentSection.document_id == document_id))
+    await db.delete(doc)
+    await db.commit()
+    return {"status": "deleted", "document_id": str(document_id)}
+
+
+# ─────────────────────────────────────────────────────────────────
+# Delete ALL documents for a company
+# ─────────────────────────────────────────────────────────────────
+@router.delete("/companies/{ticker}/documents")
+async def delete_all_documents(ticker: str, db: AsyncSession = Depends(get_db)):
+    result = await db.execute(select(Company).where(Company.ticker == ticker.upper()))
+    company = result.scalar_one_or_none()
+    if not company:
+        raise HTTPException(404, f"Company {ticker} not found")
+
+    docs = await db.execute(select(Document).where(Document.company_id == company.id))
+    doc_ids = [d.id for d in docs.scalars().all()]
+
+    if doc_ids:
+        await db.execute(delete(ReviewQueueItem).where(ReviewQueueItem.entity_id.in_(doc_ids)))
+        await db.execute(delete(EventAssessment).where(EventAssessment.document_id.in_(doc_ids)))
+        await db.execute(delete(ExtractedMetric).where(ExtractedMetric.document_id.in_(doc_ids)))
+        await db.execute(delete(DocumentSection).where(DocumentSection.document_id.in_(doc_ids)))
+        await db.execute(delete(Document).where(Document.company_id == company.id))
+        await db.commit()
+
+    return {"status": "deleted", "documents_removed": len(doc_ids)}
