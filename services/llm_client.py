@@ -35,25 +35,49 @@ def call_llm(prompt: str, *, max_tokens: int | None = None, temperature: float |
         messages=[{"role": "user", "content": prompt}],
     )
     text = resp.content[0].text.strip()
-    logger.debug("LLM response length: %d chars", len(text))
+    logger.debug("LLM response length: %d chars, stop_reason: %s", len(text), resp.stop_reason)
     return text
+
+
+def _repair_truncated_json(raw: str) -> Any:
+    """
+    Attempt to salvage a truncated JSON array by finding the last
+    complete object and closing the array.
+    """
+    last_brace = raw.rfind("}")
+    if last_brace == -1:
+        raise json.JSONDecodeError("No complete JSON object found", raw, 0)
+
+    candidate = raw[:last_brace + 1]
+    if not candidate.rstrip().endswith("]"):
+        candidate = candidate.rstrip().rstrip(",") + "\n]"
+
+    return json.loads(candidate)
 
 
 def call_llm_json(prompt: str, **kwargs) -> Any:
     """
     Call the LLM and parse the response as JSON.
     Strips markdown fences if present.
+    Attempts repair if JSON is truncated.
     """
     raw = call_llm(prompt, **kwargs)
-    # Strip ```json ... ``` if the model wraps its output
     cleaned = raw
     if cleaned.startswith("```"):
-        cleaned = cleaned.split("\n", 1)[1]  # drop first line
+        cleaned = cleaned.split("\n", 1)[1]
     if cleaned.endswith("```"):
         cleaned = cleaned.rsplit("```", 1)[0]
     cleaned = cleaned.strip()
+
     try:
         return json.loads(cleaned)
+    except json.JSONDecodeError:
+        pass
+
+    try:
+        result = _repair_truncated_json(cleaned)
+        logger.warning("Repaired truncated JSON response (%d chars)", len(cleaned))
+        return result
     except json.JSONDecodeError as exc:
-        logger.error("Failed to parse LLM JSON: %s — raw: %s", exc, raw[:500])
+        logger.error("Failed to parse or repair LLM JSON: %s — raw: %s", exc, raw[:500])
         raise
