@@ -3,7 +3,7 @@ SQLAlchemy ORM models – mirrors §6 of the technical specification.
 """
 
 from sqlalchemy import (
-    Boolean, Column, Date, ForeignKey, Integer, Numeric, Text, DateTime,
+    Boolean, Column, Date, ForeignKey, Integer, LargeBinary, Numeric, Text, DateTime,
 )
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
@@ -49,6 +49,7 @@ class Document(Base, TimestampMixin):
     source_url = Column(Text)
     published_at = Column(DateTime(timezone=True))
     file_path = Column(Text)
+    file_content = Column(LargeBinary)     # store raw file bytes in DB
     checksum = Column(Text)
     parsing_status = Column(Text, default="pending")  # pending | processing | completed | failed
 
