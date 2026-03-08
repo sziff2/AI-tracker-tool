@@ -98,7 +98,11 @@ async def process_doc(document_id: uuid.UUID, db: AsyncSession = Depends(get_db)
     doc = result.scalar_one_or_none()
     if not doc:
         raise HTTPException(404, "Document not found")
-    summary = await process_document(db, doc)
+    # Load company to get ticker (avoid lazy load in async context)
+    company_result = await db.execute(select(Company).where(Company.id == doc.company_id))
+    company = company_result.scalar_one_or_none()
+    ticker = company.ticker if company else "UNKNOWN"
+    summary = await process_document(db, doc, ticker=ticker)
     return summary
 
 
@@ -112,10 +116,14 @@ async def extract_doc(document_id: uuid.UUID, db: AsyncSession = Depends(get_db)
     if not doc:
         raise HTTPException(404, "Document not found")
 
+    # Load company to get ticker (avoid lazy load in async context)
+    company_result = await db.execute(select(Company).where(Company.id == doc.company_id))
+    company = company_result.scalar_one_or_none()
+    ticker = company.ticker if company else "UNKNOWN"
+
     # Read parsed text
     from configs.settings import settings
     proc_dir = Path(settings.storage_base_path) / "processed"
-    ticker = doc.company.ticker if doc.company else "UNKNOWN"
     text_path = proc_dir / ticker / (doc.period_label or "misc") / "parsed_text.json"
 
     if not text_path.exists():
