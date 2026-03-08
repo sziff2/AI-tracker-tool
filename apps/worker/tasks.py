@@ -87,7 +87,7 @@ def process_document_task(document_id: str):
 
 async def _async_process(document_id: str):
     from apps.api.database import AsyncSessionLocal
-    from apps.api.models import Document
+    from apps.api.models import Company, Document
     from services.document_parser import process_document
     from services.metric_extractor import extract_metrics, extract_guidance
     from services.thesis_comparator import compare_thesis
@@ -102,15 +102,19 @@ async def _async_process(document_id: str):
             logger.error("Document %s not found", document_id)
             return
 
+        # Load company to get ticker
+        company_result = await db.execute(select(Company).where(Company.id == doc.company_id))
+        company = company_result.scalar_one_or_none()
+        ticker = company.ticker if company else "UNKNOWN"
+
         # 1. Parse
         logger.info("[%s] Step 1: Parsing …", document_id)
-        summary = await process_document(db, doc)
+        summary = await process_document(db, doc, ticker=ticker)
 
         # 2. Extract
         logger.info("[%s] Step 2: Extracting metrics …", document_id)
         from pathlib import Path
         import json
-        ticker = doc.company.ticker if doc.company else "UNKNOWN"
         text_path = (
             Path(settings.storage_base_path) / "processed" / ticker / (doc.period_label or "misc") / "parsed_text.json"
         )
