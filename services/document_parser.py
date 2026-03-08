@@ -88,6 +88,15 @@ async def process_document(db: AsyncSession, document: Document, ticker: str = "
     file_path = document.file_path
     ext = Path(file_path).suffix.lower()
 
+    # Restore file from DB if missing on disk (e.g. after Railway redeploy)
+    if not Path(file_path).exists() and document.file_content:
+        Path(file_path).parent.mkdir(parents=True, exist_ok=True)
+        Path(file_path).write_bytes(document.file_content)
+        logger.info("Restored file from DB: %s", file_path)
+
+    if not Path(file_path).exists():
+        raise FileNotFoundError(f"File not found and no DB backup: {file_path}")
+
     # 1. Extract
     if ext == ".pdf":
         pages = extract_text_pymupdf(file_path)
