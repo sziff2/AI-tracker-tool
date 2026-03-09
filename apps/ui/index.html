@@ -7,115 +7,71 @@
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,600;1,6..72,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  min-height: 100vh;
-  background: #0f1117;
-  color: #e2e4e9;
-  font-family: 'Newsreader', Georgia, serif;
-}
-.header {
-  border-bottom: 1px solid #1e2028;
-  padding: 20px 32px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-.header-icon {
-  width: 32px; height: 32px;
-  border-radius: 8px;
-  background: linear-gradient(135deg, #c9a960, #a88932);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 16px; font-weight: 700; color: #0f1117;
-  font-family: 'DM Sans', sans-serif;
-}
+body { min-height: 100vh; background: #0f1117; color: #e2e4e9; font-family: 'Newsreader', Georgia, serif; }
+.header { border-bottom: 1px solid #1e2028; padding: 20px 32px; display: flex; align-items: center; gap: 12px; }
+.header-icon { width: 32px; height: 32px; border-radius: 8px; background: linear-gradient(135deg, #c9a960, #a88932); display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700; color: #0f1117; font-family: 'DM Sans', sans-serif; }
 .header-title { font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 15px; color: #e2e4e9; }
 .header-sub { font-family: 'DM Sans', sans-serif; font-size: 11px; color: #5a5d68; letter-spacing: 0.5px; }
 .container { max-width: 800px; margin: 0 auto; padding: 40px 24px 80px; }
 h1 { font-size: 32px; font-weight: 300; line-height: 1.3; color: #f0f1f4; margin-bottom: 8px; }
 .subtitle { font-family: 'DM Sans', sans-serif; font-size: 14px; color: #6b6e7a; margin-bottom: 40px; line-height: 1.6; }
-
-.upload-zone {
-  border: 2px dashed #2a2d37;
-  border-radius: 12px;
-  padding: 32px;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  background: #15171e;
-}
-.upload-zone:hover { border-color: #c9a960; background: #1a1c25; }
-.upload-zone.has-file { border-color: #c9a960; border-style: solid; background: #1a1c25; }
-.upload-zone .icon { font-size: 24px; margin-bottom: 8px; }
-.upload-zone .name { font-family: 'DM Sans', sans-serif; font-size: 14px; color: #c9a960; }
-.upload-zone .hint { font-family: 'DM Sans', sans-serif; font-size: 12px; color: #5a5d68; margin-top: 4px; }
-.upload-zone .placeholder { font-family: 'DM Sans', sans-serif; font-size: 14px; color: #7a7d88; }
-
-.fields { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 24px; }
-.field-label {
-  font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 600;
-  letter-spacing: 1.2px; text-transform: uppercase; color: #7a7d88; margin-bottom: 6px;
-}
-.field-input {
-  width: 100%; background: #15171e; border: 1px solid #2a2d37; border-radius: 8px;
-  padding: 10px 14px; color: #e2e4e9; font-family: 'DM Sans', sans-serif; font-size: 14px;
-  outline: none; transition: border-color 0.2s;
-}
+.field-label { font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase; color: #7a7d88; margin-bottom: 6px; }
+.field-input { width: 100%; background: #15171e; border: 1px solid #2a2d37; border-radius: 8px; padding: 10px 14px; color: #e2e4e9; font-family: 'DM Sans', sans-serif; font-size: 14px; outline: none; transition: border-color 0.2s; }
 .field-input:focus { border-color: #c9a960; }
-select.field-input {
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%237a7d88' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px;
-}
-
-.submit-btn {
-  width: 100%; padding: 14px; margin-top: 28px;
-  background: linear-gradient(135deg, #c9a960, #a88932);
-  color: #0f1117; border: none; border-radius: 10px;
-  font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600;
-  cursor: pointer; letter-spacing: 0.5px; transition: all 0.2s;
-}
+select.field-input { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%237a7d88' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; }
+.fields { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 24px; }
+.submit-btn { width: 100%; padding: 14px; margin-top: 28px; background: linear-gradient(135deg, #c9a960, #a88932); color: #0f1117; border: none; border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600; cursor: pointer; letter-spacing: 0.5px; transition: all 0.2s; }
 .submit-btn:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 4px 20px rgba(201,169,96,0.3); }
 .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
 .loading { text-align: center; margin-top: 32px; font-family: 'DM Sans', sans-serif; font-size: 14px; color: #c9a960; animation: pulse 2s ease-in-out infinite; }
 @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
+.error-msg { margin-top: 20px; padding: 12px 16px; background: #1c1215; border: 1px solid #3d1f23; border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 13px; color: #f87171; }
 
-.error-msg {
-  margin-top: 20px; padding: 12px 16px; background: #1c1215; border: 1px solid #3d1f23;
-  border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 13px; color: #f87171;
-}
+/* File list */
+.file-list { margin-top: 16px; }
+.file-row { display: flex; align-items: center; gap: 12px; padding: 12px 16px; background: #15171e; border: 1px solid #2a2d37; border-radius: 10px; margin-bottom: 8px; }
+.file-row .file-icon { font-size: 20px; flex-shrink: 0; }
+.file-row .file-info { flex: 1; min-width: 0; }
+.file-row .file-name { font-family: 'DM Sans', sans-serif; font-size: 13px; color: #e2e4e9; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.file-row .file-size { font-family: 'DM Sans', sans-serif; font-size: 11px; color: #5a5d68; }
+.file-row select { background: #1a1c25; border: 1px solid #2a2d37; border-radius: 6px; padding: 6px 28px 6px 10px; color: #c9a960; font-family: 'DM Sans', sans-serif; font-size: 12px; outline: none; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='%23c9a960' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 8px center; }
+.file-row .remove-btn { background: none; border: none; color: #5a5d68; cursor: pointer; font-size: 18px; padding: 4px 8px; border-radius: 4px; transition: color 0.2s; }
+.file-row .remove-btn:hover { color: #f87171; }
 
+.add-file-btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 14px; background: transparent; border: 2px dashed #2a2d37; border-radius: 10px; color: #7a7d88; font-family: 'DM Sans', sans-serif; font-size: 13px; cursor: pointer; transition: all 0.2s; margin-top: 8px; }
+.add-file-btn:hover { border-color: #c9a960; color: #c9a960; background: #15171e; }
+
+/* Pipeline steps */
 .pipeline-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
-.pipeline-step {
-  font-family: 'DM Sans', sans-serif; font-size: 12px; padding: 4px 12px;
-  border-radius: 20px; background: #1a1c25; display: flex; align-items: center;
-}
+.pipeline-step { font-family: 'DM Sans', sans-serif; font-size: 12px; padding: 4px 12px; border-radius: 20px; background: #1a1c25; display: flex; align-items: center; }
 .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 8px; }
-.dot-ok { background: #22c55e; }
-.dot-error { background: #ef4444; }
-.dot-skipped { background: #f59e0b; }
+.dot-ok { background: #22c55e; } .dot-error { background: #ef4444; } .dot-skipped { background: #f59e0b; }
 
-.section-card {
-  background: #15171e; border-radius: 12px; padding: 28px 32px;
-  margin-bottom: 16px; border-left: 3px solid transparent;
-}
+/* Progress steps */
+.progress-steps { margin-top: 24px; }
+.progress-step { display: flex; align-items: center; gap: 12px; padding: 10px 0; font-family: 'DM Sans', sans-serif; font-size: 13px; color: #5a5d68; border-bottom: 1px solid #1a1c25; }
+.progress-step.active { color: #c9a960; }
+.progress-step.done { color: #22c55e; }
+.progress-step .step-icon { width: 24px; text-align: center; }
+
+/* Result sections */
+.section-card { background: #15171e; border-radius: 12px; padding: 28px 32px; margin-bottom: 16px; border-left: 3px solid transparent; }
 .section-card.highlight { border-left-color: #c9a960; background: #1a1c25; }
 .section-card.meta { background: #12141a; border-left-color: #3b82f6; }
-.section-card.metrics { background: #12141a; }
-.section-title {
-  font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 600;
-  letter-spacing: 1.2px; text-transform: uppercase; color: #7a7d88; margin-bottom: 12px;
-}
-.section-card.highlight .section-title { color: #c9a960; }
+.section-card.synthesis { border-left-color: #c9a960; background: #1a1c25; }
+.section-title { font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase; color: #7a7d88; margin-bottom: 12px; }
+.section-card.highlight .section-title, .section-card.synthesis .section-title { color: #c9a960; }
 .section-content { font-size: 14.5px; line-height: 1.75; color: #c4c6ce; white-space: pre-wrap; }
 .section-card.highlight .section-content { font-size: 16px; color: #f0f1f4; }
-.section-card.metrics .section-content { font-family: 'DM Sans', sans-serif; font-size: 13px; }
-
 .result-header { font-size: 28px; font-weight: 300; line-height: 1.3; color: #f0f1f4; margin-bottom: 4px; }
 .gold-line { width: 60px; height: 2px; background: linear-gradient(90deg, #c9a960, transparent); margin: 12px 0 32px; }
-
 .new-btn { display: block; max-width: 300px; margin: 40px auto 0; }
-#file-input { display: none; }
+
+/* Tab bar */
+.tab-bar { display: flex; gap: 4px; margin-bottom: 24px; background: #15171e; border-radius: 10px; padding: 4px; }
+.tab { flex: 1; padding: 10px; text-align: center; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; color: #7a7d88; border-radius: 8px; cursor: pointer; transition: all 0.2s; border: none; background: none; }
+.tab.active { background: #1e2028; color: #c9a960; }
+.tab:hover:not(.active) { color: #e2e4e9; }
 </style>
 </head>
 <body>
@@ -131,22 +87,10 @@ select.field-input {
 <div class="container">
   <!-- Upload form -->
   <div id="form-section">
-    <h1>Upload a document</h1>
-    <p class="subtitle">Drop an earnings release, transcript, or presentation. The system will parse it, extract KPIs, compare against the thesis, and generate a full research briefing.</p>
+    <h1>Upload documents</h1>
+    <p class="subtitle">Add your earnings release, transcript, broker notes, and presentations for the same period. Each is analysed with a tailored prompt, then everything is synthesised into one opinionated briefing.</p>
 
-    <div class="upload-zone" id="upload-zone" onclick="document.getElementById('file-input').click()">
-      <input type="file" id="file-input" accept=".pdf,.docx,.txt">
-      <div id="upload-placeholder">
-        <div class="icon" style="opacity:0.4">📎</div>
-        <div class="placeholder">Click to select a PDF, DOCX, or TXT file</div>
-      </div>
-      <div id="upload-info" style="display:none">
-        <div class="icon">📄</div>
-        <div class="name" id="file-name"></div>
-        <div class="hint" id="file-size"></div>
-      </div>
-    </div>
-
+    <!-- Company & Period -->
     <div class="fields">
       <div>
         <div class="field-label">Company Ticker</div>
@@ -156,25 +100,18 @@ select.field-input {
         <div class="field-label">Period</div>
         <input class="field-input" id="period" placeholder="e.g. 2025_Q2">
       </div>
-      <div>
-        <div class="field-label">Document Type</div>
-        <select class="field-input" id="doc-type">
-          <option value="earnings_release">Earnings Release</option>
-          <option value="transcript">Transcript</option>
-          <option value="presentation">Presentation</option>
-          <option value="10-Q">10-Q</option>
-          <option value="10-K">10-K</option>
-          <option value="annual_report">Annual Report</option>
-        </select>
-      </div>
-      <div>
-        <div class="field-label">Title (optional)</div>
-        <input class="field-input" id="title" placeholder="e.g. Heineken 2025 Q2">
-      </div>
     </div>
 
-    <button class="submit-btn" id="submit-btn" onclick="submitForm()">Upload & Generate Research</button>
-    <div class="loading" id="loading" style="display:none">Uploading and processing — this takes 2–3 minutes…</div>
+    <!-- File list -->
+    <div class="field-label" style="margin-top:28px">Documents</div>
+    <div class="file-list" id="file-list"></div>
+    <button class="add-file-btn" onclick="addFile()">
+      <span style="font-size:18px">+</span> Add document
+    </button>
+    <input type="file" id="hidden-file-input" accept=".pdf,.docx,.txt" style="display:none">
+
+    <button class="submit-btn" id="submit-btn" onclick="submitForm()">Analyse & Synthesise</button>
+    <div class="loading" id="loading" style="display:none"></div>
     <div class="error-msg" id="error" style="display:none"></div>
   </div>
 
@@ -183,31 +120,82 @@ select.field-input {
 </div>
 
 <script>
-const fileInput = document.getElementById('file-input');
-const uploadZone = document.getElementById('upload-zone');
+let uploadedFiles = []; // [{file, docType}]
+let pendingFileIndex = -1;
 
-fileInput.addEventListener('change', function() {
+const hiddenInput = document.getElementById('hidden-file-input');
+
+function addFile() {
+  pendingFileIndex = uploadedFiles.length;
+  hiddenInput.click();
+}
+
+hiddenInput.addEventListener('change', function() {
   const file = this.files[0];
-  if (file) {
-    uploadZone.classList.add('has-file');
-    document.getElementById('upload-placeholder').style.display = 'none';
-    document.getElementById('upload-info').style.display = 'block';
-    document.getElementById('file-name').textContent = file.name;
-    document.getElementById('file-size').textContent = (file.size / 1024 / 1024).toFixed(1) + ' MB — Click to change';
-  }
+  if (!file) return;
+  // Auto-detect type from filename
+  let docType = 'other';
+  const name = file.name.toLowerCase();
+  if (name.includes('transcript') || name.includes('call')) docType = 'transcript';
+  else if (name.includes('broker') || name.includes('note') || name.includes('research')) docType = 'broker_note';
+  else if (name.includes('presentation') || name.includes('slides') || name.includes('deck')) docType = 'presentation';
+  else if (name.includes('earning') || name.includes('result') || name.includes('release') || name.includes('q1') || name.includes('q2') || name.includes('q3') || name.includes('q4') || name.includes('h1') || name.includes('h2')) docType = 'earnings_release';
+
+  uploadedFiles.push({ file, docType });
+  this.value = '';
+  renderFileList();
 });
 
+function removeFile(idx) {
+  uploadedFiles.splice(idx, 1);
+  renderFileList();
+}
+
+function changeType(idx, val) {
+  uploadedFiles[idx].docType = val;
+}
+
+function renderFileList() {
+  const container = document.getElementById('file-list');
+  const typeLabels = {
+    earnings_release: 'Earnings Release',
+    transcript: 'Transcript',
+    broker_note: 'Broker Note',
+    presentation: 'Presentation',
+    '10-Q': '10-Q',
+    '10-K': '10-K',
+    annual_report: 'Annual Report',
+    other: 'Other',
+  };
+  const icons = {
+    earnings_release: '📊', transcript: '🎙️', broker_note: '📝',
+    presentation: '📑', '10-Q': '📋', '10-K': '📋',
+    annual_report: '📚', other: '📄',
+  };
+
+  let html = '';
+  uploadedFiles.forEach((f, i) => {
+    const size = (f.file.size / 1024 / 1024).toFixed(1);
+    html += '<div class="file-row">';
+    html += '<div class="file-icon">' + (icons[f.docType] || '📄') + '</div>';
+    html += '<div class="file-info"><div class="file-name">' + esc(f.file.name) + '</div><div class="file-size">' + size + ' MB</div></div>';
+    html += '<select onchange="changeType(' + i + ', this.value)">';
+    Object.keys(typeLabels).forEach(k => {
+      html += '<option value="' + k + '"' + (k === f.docType ? ' selected' : '') + '>' + typeLabels[k] + '</option>';
+    });
+    html += '</select>';
+    html += '<button class="remove-btn" onclick="removeFile(' + i + ')">&times;</button>';
+    html += '</div>';
+  });
+  container.innerHTML = html;
+}
+
 async function submitForm() {
-  const file = fileInput.files[0];
   const ticker = document.getElementById('ticker').value.trim().toUpperCase();
   const period = document.getElementById('period').value.trim();
-  const docType = document.getElementById('doc-type').value;
-  const title = document.getElementById('title').value.trim();
 
-  if (!file || !ticker || !period) {
-    showError('Please fill in ticker, period, and select a file.');
-    return;
-  }
+  if (!ticker || !period) { showError('Please fill in ticker and period.'); return; }
+  if (uploadedFiles.length === 0) { showError('Please add at least one document.'); return; }
 
   const btn = document.getElementById('submit-btn');
   const loading = document.getElementById('loading');
@@ -215,31 +203,67 @@ async function submitForm() {
 
   btn.disabled = true;
   btn.textContent = 'Processing…';
-  loading.style.display = 'block';
   error.style.display = 'none';
 
-  const formData = new FormData();
-  formData.append('file', file);
-  formData.append('document_type', docType);
-  formData.append('period_label', period);
-  formData.append('title', title || file.name);
+  // Determine endpoint
+  const useBatch = uploadedFiles.length > 1;
 
-  try {
-    const resp = await fetch('/api/v1/companies/' + ticker + '/documents/upload-and-process', {
-      method: 'POST',
-      body: formData,
+  if (useBatch) {
+    loading.style.display = 'block';
+    loading.textContent = 'Processing ' + uploadedFiles.length + ' documents with specialised prompts, then synthesising — this takes 3–5 minutes…';
+
+    const formData = new FormData();
+    formData.append('period_label', period);
+    uploadedFiles.forEach(f => {
+      formData.append('files', f.file);
+      formData.append('document_types', f.docType);
+      formData.append('titles', f.file.name);
     });
-    if (!resp.ok) {
-      const err = await resp.json().catch(() => ({}));
-      throw new Error(err.detail || 'Server error ' + resp.status);
+
+    try {
+      const resp = await fetch('/api/v1/companies/' + ticker + '/documents/batch-upload', {
+        method: 'POST', body: formData,
+      });
+      if (!resp.ok) {
+        const err = await resp.json().catch(() => ({}));
+        throw new Error(err.detail || 'Server error ' + resp.status);
+      }
+      const data = await resp.json();
+      renderBatchResult(data);
+    } catch (e) {
+      showError(e.message);
+      btn.disabled = false;
+      btn.textContent = 'Analyse & Synthesise';
+      loading.style.display = 'none';
     }
-    const data = await resp.json();
-    renderResult(data);
-  } catch (e) {
-    showError(e.message);
-    btn.disabled = false;
-    btn.textContent = 'Upload & Generate Research';
-    loading.style.display = 'none';
+  } else {
+    // Single file — use upload-and-process
+    loading.style.display = 'block';
+    loading.textContent = 'Uploading and processing — this takes 2–3 minutes…';
+
+    const f = uploadedFiles[0];
+    const formData = new FormData();
+    formData.append('file', f.file);
+    formData.append('document_type', f.docType);
+    formData.append('period_label', period);
+    formData.append('title', f.file.name);
+
+    try {
+      const resp = await fetch('/api/v1/companies/' + ticker + '/documents/upload-and-process', {
+        method: 'POST', body: formData,
+      });
+      if (!resp.ok) {
+        const err = await resp.json().catch(() => ({}));
+        throw new Error(err.detail || 'Server error ' + resp.status);
+      }
+      const data = await resp.json();
+      renderSingleResult(data);
+    } catch (e) {
+      showError(e.message);
+      btn.disabled = false;
+      btn.textContent = 'Analyse & Synthesise';
+      loading.style.display = 'none';
+    }
   }
 }
 
@@ -249,40 +273,95 @@ function showError(msg) {
   el.style.display = 'block';
 }
 
-function renderResult(data) {
+// ── Render batch (multi-doc synthesis) result ─────────────────
+function renderBatchResult(data) {
   document.getElementById('form-section').style.display = 'none';
   const container = document.getElementById('result-section');
   container.style.display = 'block';
 
-  const { company, period, classification, metrics, guidance, thesis_comparison, surprises, briefing, ir_questions, pipeline_status } = data;
+  const { company, period, documents_processed, synthesis, thesis_comparison, surprises, ir_questions, per_document_extractions } = data;
+
+  let html = '';
+
+  // Header
+  html += '<div class="result-header">' + esc(company?.name || '') + ' (' + esc(company?.ticker || '') + ') — ' + esc(period) + '</div>';
+  html += '<div class="gold-line"></div>';
+
+  // Documents processed summary
+  if (documents_processed?.length) {
+    let docSummary = documents_processed.map(d => {
+      const status = d.steps?.every(s => s.status === 'ok') ? '✓' : '⚠';
+      return status + ' ' + esc(d.filename) + ' (' + d.document_type + ')';
+    }).join('\n');
+    html += card('meta', 'Documents Processed (' + documents_processed.length + ')', docSummary);
+  }
+
+  // Synthesis (the main output)
+  if (synthesis && !synthesis.error) {
+    if (synthesis.headline) html += card('synthesis', 'Headline', esc(synthesis.headline));
+    if (synthesis.what_happened) html += card('section', 'What Happened', esc(synthesis.what_happened));
+    if (synthesis.management_message) html += card('section', 'Management Message & Credibility', esc(synthesis.management_message));
+    if (synthesis.what_the_street_thinks) html += card('section', 'What The Street Thinks', esc(synthesis.what_the_street_thinks));
+    if (synthesis.thesis_impact) html += card('section', 'Thesis Impact', esc(synthesis.thesis_impact));
+    if (synthesis.key_debates) html += card('section', 'Key Debates', esc(synthesis.key_debates));
+    if (synthesis.risks_updated) html += card('section', 'Risks Updated', esc(synthesis.risks_updated));
+    if (synthesis.action_items) html += card('section', 'Action Items', esc(synthesis.action_items));
+    if (synthesis.bottom_line) html += card('highlight', 'Bottom Line', esc(synthesis.bottom_line));
+  } else if (synthesis?.error) {
+    html += card('section', 'Synthesis Error', esc(synthesis.error));
+  }
+
+  // Thesis comparison
+  if (thesis_comparison && !thesis_comparison.error) {
+    let t = 'Direction: ' + (thesis_comparison.thesis_direction || '').toUpperCase() + '\n\n' + esc(thesis_comparison.summary || '');
+    if (thesis_comparison.supporting_signals?.length) t += '\n\nSupporting: ' + thesis_comparison.supporting_signals.map(esc).join('. ') + '.';
+    if (thesis_comparison.weakening_signals?.length) t += '\n\nWeakening: ' + thesis_comparison.weakening_signals.map(esc).join('. ') + '.';
+    if (thesis_comparison.new_risks?.length) t += '\n\nNew risks: ' + thesis_comparison.new_risks.map(esc).join('. ') + '.';
+    html += card('section', 'Thesis Comparison', t);
+  }
+
+  // Surprises
+  if (surprises?.length) {
+    const st = surprises.map(s => (s.direction === 'positive' ? '↑' : '↓') + ' ' + esc(s.metric_or_topic) + ' (' + s.magnitude + '): ' + esc(s.description)).join('\n\n');
+    html += card('section', 'Surprises', st);
+  }
+
+  // IR Questions
+  if (ir_questions?.length) {
+    const qt = ir_questions.map((q, i) => (i+1) + '. ' + esc(q.topic) + '\n' + esc(q.question) + '\nRationale: ' + esc(q.rationale)).join('\n\n');
+    html += card('section', 'Suggested IR Questions', qt);
+  }
+
+  // Per-document extraction samples
+  if (per_document_extractions && Object.keys(per_document_extractions).length > 0) {
+    let extText = '';
+    for (const [fname, ext] of Object.entries(per_document_extractions)) {
+      extText += esc(fname) + ' (' + ext.type + '): ' + ext.items_count + ' items extracted\n';
+    }
+    html += card('meta', 'Per-Document Extraction Summary', extText.trim());
+  }
+
+  html += '<div style="margin-top:40px;text-align:center"><button class="submit-btn new-btn" onclick="resetForm()">New Analysis</button></div>';
+  container.innerHTML = html;
+}
+
+// ── Render single-doc result ──────────────────────────────────
+function renderSingleResult(data) {
+  document.getElementById('form-section').style.display = 'none';
+  const container = document.getElementById('result-section');
+  container.style.display = 'block';
+
+  const { company, period, classification, briefing, thesis_comparison, surprises, ir_questions, metrics, guidance } = data;
   const metricCount = (metrics || []).length;
   const guidanceCount = (guidance || []).length;
 
   let html = '';
-
-  // Pipeline bar
-  if (pipeline_status) {
-    html += '<div class="pipeline-bar">';
-    pipeline_status.forEach(s => {
-      const dotClass = s.status === 'ok' ? 'dot-ok' : s.status === 'error' ? 'dot-error' : 'dot-skipped';
-      html += '<div class="pipeline-step"><span class="dot ' + dotClass + '"></span>' + s.step + '</div>';
-    });
-    html += '</div>';
-  }
-
-  // Header
-  html += '<div class="result-header">' + esc(company?.name || '') + ' (' + esc(company?.ticker || '') + ') — ' + esc(period) + ' Research Update</div>';
+  html += '<div class="result-header">' + esc(company?.name || '') + ' (' + esc(company?.ticker || '') + ') — ' + esc(period) + '</div>';
   html += '<div class="gold-line"></div>';
 
-  // Classification
   if (classification) {
-    html += card('meta', 'Document Classification',
-      'Identified as a ' + esc(classification.document_type) + ' for ' + esc(classification.title || company?.name) +
-      ' (' + esc(classification.period_label) + '). ' + metricCount + ' financial metrics and ' + guidanceCount +
-      ' guidance items were extracted with ' + (classification.confidence * 100).toFixed(0) + '% confidence.');
+    html += card('meta', 'Document Classification', 'Identified as ' + esc(classification.document_type) + '. ' + metricCount + ' metrics and ' + guidanceCount + ' guidance items extracted.');
   }
-
-  // Briefing
   if (briefing) {
     html += card('section', 'What Happened', esc(briefing.what_happened));
     html += card('section', 'What Changed', esc(briefing.what_changed));
@@ -290,65 +369,25 @@ function renderResult(data) {
     html += card('section', 'Risks', esc(briefing.risks));
     html += card('highlight', 'Bottom Line', esc(briefing.bottom_line));
   }
-
-  // Thesis comparison
   if (thesis_comparison) {
-    let t = 'Overall direction: ' + thesis_comparison.thesis_direction.toUpperCase() + '.\n\n' + esc(thesis_comparison.summary);
-    if (thesis_comparison.supporting_signals?.length) t += '\n\nSupporting signals: ' + thesis_comparison.supporting_signals.map(esc).join('. ') + '.';
-    if (thesis_comparison.weakening_signals?.length) t += '\n\nWeakening signals: ' + thesis_comparison.weakening_signals.map(esc).join('. ') + '.';
-    if (thesis_comparison.new_risks?.length) t += '\n\nNew risks: ' + thesis_comparison.new_risks.map(esc).join('. ') + '.';
+    let t = 'Direction: ' + (thesis_comparison.thesis_direction || '').toUpperCase() + '\n\n' + esc(thesis_comparison.summary || '');
     html += card('section', 'Thesis Comparison', t);
   }
-
-  // Surprises
   if (surprises?.length) {
-    const st = surprises.map(s =>
-      (s.direction === 'positive' ? '↑' : '↓') + ' ' + esc(s.metric_or_topic) + ' (' + s.magnitude + '): ' + esc(s.description)
-    ).join('\n\n');
+    const st = surprises.map(s => (s.direction === 'positive' ? '↑' : '↓') + ' ' + esc(s.metric_or_topic) + ': ' + esc(s.description)).join('\n\n');
     html += card('section', 'Surprises', st);
   }
-
-  // Key metrics
-  if (metrics?.length) {
-    const keyMetrics = metrics.filter(m => m.confidence >= 0.9 && m.segment !== 'guidance').slice(0, 25);
-    const mt = keyMetrics.map(m => {
-      const val = m.metric_value !== null ? m.metric_value + (m.unit ? ' ' + m.unit : '') : m.metric_text;
-      const geo = m.geography ? ' (' + esc(m.geography) + ')' : '';
-      const seg = m.segment ? ' [' + esc(m.segment) + ']' : '';
-      return esc(m.metric_name) + seg + geo + ': ' + esc(String(val));
-    }).join('\n');
-    html += card('metrics', 'Key Metrics Extracted (' + metricCount + ' total)', mt);
-  }
-
-  // IR Questions
   if (ir_questions?.length) {
-    const qt = ir_questions.map((q, i) =>
-      (i + 1) + '. ' + esc(q.topic) + '\n' + esc(q.question) + '\nRationale: ' + esc(q.rationale)
-    ).join('\n\n');
-    html += card('section', 'Suggested IR Questions', qt);
+    const qt = ir_questions.map((q, i) => (i+1) + '. ' + esc(q.topic) + '\n' + esc(q.question)).join('\n\n');
+    html += card('section', 'IR Questions', qt);
   }
 
-  // Guidance
-  if (guidance?.length) {
-    const gt = guidance.map(g => {
-      let range = '';
-      if (g.guidance_type === 'range' && g.low != null && g.high != null) range = ' (' + g.low + '–' + g.high + (g.unit ? ' ' + g.unit : '') + ')';
-      else if (g.guidance_type === 'point' && g.low != null) range = ' (' + g.low + (g.unit ? ' ' + g.unit : '') + ')';
-      return esc(g.metric_name) + range + ': ' + esc(g.guidance_text);
-    }).join('\n\n');
-    html += card('section', 'Management Guidance', gt);
-  }
-
-  // New analysis button
   html += '<div style="margin-top:40px;text-align:center"><button class="submit-btn new-btn" onclick="resetForm()">New Analysis</button></div>';
-
   container.innerHTML = html;
 }
 
 function card(type, title, content) {
-  return '<div class="section-card ' + type + '">' +
-    '<div class="section-title">' + esc(title) + '</div>' +
-    '<div class="section-content">' + content + '</div></div>';
+  return '<div class="section-card ' + type + '"><div class="section-title">' + esc(title) + '</div><div class="section-content">' + content + '</div></div>';
 }
 
 function esc(s) {
@@ -360,15 +399,12 @@ function resetForm() {
   document.getElementById('form-section').style.display = 'block';
   document.getElementById('result-section').style.display = 'none';
   document.getElementById('submit-btn').disabled = false;
-  document.getElementById('submit-btn').textContent = 'Upload & Generate Research';
+  document.getElementById('submit-btn').textContent = 'Analyse & Synthesise';
   document.getElementById('loading').style.display = 'none';
   document.getElementById('error').style.display = 'none';
-  fileInput.value = '';
-  uploadZone.classList.remove('has-file');
-  document.getElementById('upload-placeholder').style.display = 'block';
-  document.getElementById('upload-info').style.display = 'none';
+  uploadedFiles = [];
+  renderFileList();
   document.getElementById('period').value = '';
-  document.getElementById('title').value = '';
 }
 </script>
 </body>
