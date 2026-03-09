@@ -91,6 +91,7 @@ async def upload_and_process(
 ):
     """
     One-click pipeline: upload → parse → extract KPIs → compare thesis → generate all outputs.
+    Returns full content of every step.
     """
     import json as _json
     from services.surprise_detector import detect_surprises
@@ -102,7 +103,19 @@ async def upload_and_process(
     if not company:
         raise HTTPException(404, f"Company {ticker} not found")
 
-    pipeline_log = []
+    output = {
+        "company": {"ticker": company.ticker, "name": company.name},
+        "period": period_label,
+        "pipeline_status": [],
+        "classification": None,
+        "metrics": [],
+        "guidance": [],
+        "thesis_comparison": None,
+        "surprises": [],
+        "briefing": None,
+        "ir_questions": [],
+        "thesis_drift": None,
+    }
 
     # ── Step 1: Ingest ───────────────────────────────────────────
     suffix = Path(file.filename).suffix if file.filename else ".pdf"
@@ -122,17 +135,18 @@ async def upload_and_process(
             period_label=period_label,
             title=title,
         )
-        pipeline_log.append({"step": "upload", "status": "ok", "document_id": str(doc.id)})
+        output["pipeline_status"].append({"step": "upload", "status": "ok", "document_id": str(doc.id)})
     except ValueError as exc:
         raise HTTPException(409, str(exc))
 
     # ── Step 2: Parse ────────────────────────────────────────────
     try:
         parse_result = await process_document(db, doc, ticker=company.ticker)
-        pipeline_log.append({"step": "parse", "status": "ok", "pages": parse_result["pages"], "tables": parse_result["tables_found"]})
+        output["classification"] = parse_result["classification"]
+        output["pipeline_status"].append({"step": "parse", "status": "ok", "pages": parse_result["pages"], "tables": parse_result["tables_found"]})
     except Exception as e:
-        pipeline_log.append({"step": "parse", "status": "error", "detail": str(e)[:200]})
-        return {"pipeline": pipeline_log}
+        output["pipeline_status"].append({"step": "parse", "status": "error", "detail": str(e)[:200]})
+        return output
 
     # ── Step 3: Extract KPIs ─────────────────────────────────────
     try:
@@ -143,46 +157,66 @@ async def upload_and_process(
 
         metrics = await extract_metrics(db, doc, full_text)
         guidance = await extract_guidance(db, doc, full_text)
-        pipeline_log.append({"step": "extract", "status": "ok", "metrics": len(metrics), "guidance": len(guidance)})
+
+        output["metrics"] = [
+            {
+                "metric_name": m.metric_name,
+                "metric_value": float(m.metric_value) if m.metric_value else None,
+                "metric_text": m.metric_text,
+                "unit": m.unit,
+                "segment": m.segment,
+                "geography": m.geography,
+                "source_snippet": m.source_snippet,
+                "confidence": float(m.confidence) if m.confidence else None,
+            }
+            for m in metrics
+        ]
+        output["guidance"] = guidance
+        output["pipeline_status"].append({"step": "extract", "status": "ok", "metrics": len(metrics), "guidance": len(guidance)})
     except Exception as e:
-        pipeline_log.append({"step": "extract", "status": "error", "detail": str(e)[:200]})
+        output["pipeline_status"].append({"step": "extract", "status": "error", "detail": str(e)[:200]})
 
     # ── Step 4: Compare thesis ───────────────────────────────────
     try:
         comparison = await compare_thesis(db, company.id, doc.id, period_label)
-        pipeline_log.append({"step": "compare", "status": "ok", "direction": comparison.thesis_direction})
+        output["thesis_comparison"] = comparison.model_dump()
+        output["pipeline_status"].append({"step": "compare", "status": "ok", "direction": comparison.thesis_direction})
     except ValueError:
-        pipeline_log.append({"step": "compare", "status": "skipped", "detail": "No active thesis"})
+        output["pipeline_status"].append({"step": "compare", "status": "skipped", "detail": "No active thesis"})
     except Exception as e:
-        pipeline_log.append({"step": "compare", "status": "error", "detail": str(e)[:200]})
+        output["pipeline_status"].append({"step": "compare", "status": "error", "detail": str(e)[:200]})
 
     # ── Step 5: Detect surprises ─────────────────────────────────
     try:
         surprises = await detect_surprises(db, company.id, doc.id, period_label)
-        pipeline_log.append({"step": "surprises", "status": "ok", "count": len(surprises)})
+        output["surprises"] = [s.model_dump() for s in surprises]
+        output["pipeline_status"].append({"step": "surprises", "status": "ok", "count": len(surprises)})
     except Exception as e:
-        pipeline_log.append({"step": "surprises", "status": "error", "detail": str(e)[:200]})
+        output["pipeline_status"].append({"step": "surprises", "status": "error", "detail": str(e)[:200]})
 
     # ── Step 6: Generate outputs ─────────────────────────────────
     try:
         briefing = await generate_briefing(db, company.id, period_label)
-        pipeline_log.append({"step": "briefing", "status": "ok"})
+        output["briefing"] = briefing.model_dump()
+        output["pipeline_status"].append({"step": "briefing", "status": "ok"})
     except Exception as e:
-        pipeline_log.append({"step": "briefing", "status": "error", "detail": str(e)[:200]})
+        output["pipeline_status"].append({"step": "briefing", "status": "error", "detail": str(e)[:200]})
 
     try:
         questions = await generate_ir_questions(db, company.id, period_label)
-        pipeline_log.append({"step": "ir_questions", "status": "ok", "count": len(questions)})
+        output["ir_questions"] = [q.model_dump() for q in questions]
+        output["pipeline_status"].append({"step": "ir_questions", "status": "ok", "count": len(questions)})
     except Exception as e:
-        pipeline_log.append({"step": "ir_questions", "status": "error", "detail": str(e)[:200]})
+        output["pipeline_status"].append({"step": "ir_questions", "status": "error", "detail": str(e)[:200]})
 
     try:
         drift = await generate_thesis_drift_report(db, company.id, period_label)
-        pipeline_log.append({"step": "thesis_drift", "status": "ok"})
+        output["thesis_drift"] = drift
+        output["pipeline_status"].append({"step": "thesis_drift", "status": "ok"})
     except Exception as e:
-        pipeline_log.append({"step": "thesis_drift", "status": "error", "detail": str(e)[:200]})
+        output["pipeline_status"].append({"step": "thesis_drift", "status": "error", "detail": str(e)[:200]})
 
-    return {"pipeline": pipeline_log}
+    return output
 
 
 # ─────────────────────────────────────────────────────────────────
