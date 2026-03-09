@@ -214,10 +214,10 @@ async function submitForm() {
 
     const formData = new FormData();
     formData.append('period_label', period);
+    formData.append('document_types', uploadedFiles.map(f => f.docType).join(','));
+    formData.append('titles', uploadedFiles.map(f => f.file.name).join(','));
     uploadedFiles.forEach(f => {
       formData.append('files', f.file);
-      formData.append('document_types', f.docType);
-      formData.append('titles', f.file.name);
     });
 
     try {
