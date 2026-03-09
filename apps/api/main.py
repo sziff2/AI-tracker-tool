@@ -6,9 +6,11 @@ Start with:
 """
 
 from contextlib import asynccontextmanager
+from pathlib import Path
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse
 
 from apps.api.database import async_engine, Base
 from apps.api.routes import (
@@ -62,3 +64,10 @@ app.include_router(review_router, prefix=PREFIX)
 @app.get("/health")
 async def health():
     return {"status": "ok", "version": settings.app_version}
+
+
+@app.get("/", response_class=HTMLResponse)
+async def ui():
+    """Serve the research analyst UI."""
+    html_path = Path(__file__).parent.parent / "ui" / "index.html"
+    return HTMLResponse(html_path.read_text())
