@@ -226,9 +226,9 @@ async def upload_and_process(
 async def batch_upload_and_process(
     ticker: str,
     files: list[UploadFile] = File(...),
-    document_types: list[str] = Form(...),
     period_label: str = Form(...),
-    titles: list[str] = Form(None),
+    document_types: str = Form(...),
+    titles: str = Form(""),
     db: AsyncSession = Depends(get_db),
 ):
     """
@@ -236,6 +236,9 @@ async def batch_upload_and_process(
     processed with a TYPE-SPECIFIC prompt (earnings get number extraction,
     transcripts get tone/guidance analysis, broker notes get consensus
     comparison). Then everything is synthesised into one opinionated briefing.
+
+    document_types: comma-separated list matching each file, e.g. "earnings_release,transcript,broker_note"
+    titles: comma-separated list matching each file (optional)
     """
     import json as _json
     from services.metric_extractor import extract_by_document_type
@@ -243,6 +246,10 @@ async def batch_upload_and_process(
     from services.output_generator import generate_ir_questions
     from services.llm_client import call_llm_json
     from prompts import SYNTHESIS_BRIEFING
+
+    # Parse comma-separated strings into lists
+    doc_types_list = [t.strip() for t in document_types.split(",")]
+    titles_list = [t.strip() for t in titles.split(",")] if titles else []
 
     # Look up company
     result = await db.execute(select(Company).where(Company.ticker == ticker.upper()))
@@ -260,12 +267,12 @@ async def batch_upload_and_process(
     thesis = thesis_q.scalar_one_or_none()
     thesis_text = thesis.core_thesis if thesis else "No thesis on file."
 
-    if titles is None:
-        titles = [None] * len(files)
-    while len(document_types) < len(files):
-        document_types.append("other")
-    while len(titles) < len(files):
-        titles.append(None)
+    if not titles_list or titles_list == ['']:
+        titles_list = [None] * len(files)
+    while len(doc_types_list) < len(files):
+        doc_types_list.append("other")
+    while len(titles_list) < len(files):
+        titles_list.append(None)
 
     # Buckets for type-specific extraction results
     earnings_data = []
@@ -288,7 +295,7 @@ async def batch_upload_and_process(
 
     # ── Process each file with type-specific prompts ─────────────
     for i, file in enumerate(files):
-        doc_type = document_types[i]
+        doc_type = doc_types_list[i]
         doc_result = {"filename": file.filename, "document_type": doc_type, "steps": []}
 
         # Ingest
@@ -307,7 +314,7 @@ async def batch_upload_and_process(
                 filename=file.filename or f"upload_{i}{suffix}",
                 document_type=doc_type,
                 period_label=period_label,
-                title=titles[i] or file.filename,
+                title=titles_list[i] or file.filename,
             )
             doc_result["document_id"] = str(doc.id)
             doc_result["steps"].append({"step": "upload", "status": "ok"})
