@@ -1,5 +1,6 @@
 FROM python:3.12-slim
 
+# Cache bust: 2026-03-10
 WORKDIR /app
 
 # System deps
@@ -20,8 +21,3 @@ RUN mkdir -p storage/raw storage/processed storage/outputs
 EXPOSE 8000
 
 CMD ["uvicorn", "apps.api.main:app", "--host", "0.0.0.0", "--port", "8000"]
-
-FROM python:3.12-slim
-
-# Cache bust: 2026-03-10
-WORKDIR /app
