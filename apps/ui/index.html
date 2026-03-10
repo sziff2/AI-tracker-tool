@@ -16,18 +16,21 @@ body { min-height: 100vh; background: #0f1117; color: #e2e4e9; font-family: 'New
 h1 { font-size: 32px; font-weight: 300; line-height: 1.3; color: #f0f1f4; margin-bottom: 8px; }
 .subtitle { font-family: 'DM Sans', sans-serif; font-size: 14px; color: #6b6e7a; margin-bottom: 40px; line-height: 1.6; }
 .field-label { font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase; color: #7a7d88; margin-bottom: 6px; }
-.field-input { width: 100%; background: #15171e; border: 1px solid #2a2d37; border-radius: 8px; padding: 10px 14px; color: #e2e4e9; font-family: 'DM Sans', sans-serif; font-size: 14px; outline: none; transition: border-color 0.2s; }
+.field-input, textarea.field-input { width: 100%; background: #15171e; border: 1px solid #2a2d37; border-radius: 8px; padding: 10px 14px; color: #e2e4e9; font-family: 'DM Sans', sans-serif; font-size: 14px; outline: none; transition: border-color 0.2s; }
 .field-input:focus { border-color: #c9a960; }
+textarea.field-input { resize: vertical; min-height: 80px; line-height: 1.5; }
 select.field-input { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%237a7d88' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; }
 .fields { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 24px; }
+.fields-full { display: grid; grid-template-columns: 1fr; gap: 16px; margin-top: 16px; }
 .submit-btn { width: 100%; padding: 14px; margin-top: 28px; background: linear-gradient(135deg, #c9a960, #a88932); color: #0f1117; border: none; border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600; cursor: pointer; letter-spacing: 0.5px; transition: all 0.2s; }
 .submit-btn:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 4px 20px rgba(201,169,96,0.3); }
 .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.secondary-btn { width: 100%; padding: 12px; margin-top: 12px; background: transparent; border: 1px solid #2a2d37; border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; color: #7a7d88; cursor: pointer; transition: all 0.2s; }
+.secondary-btn:hover { border-color: #c9a960; color: #c9a960; }
 .loading { text-align: center; margin-top: 32px; font-family: 'DM Sans', sans-serif; font-size: 14px; color: #c9a960; animation: pulse 2s ease-in-out infinite; }
 @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
 .error-msg { margin-top: 20px; padding: 12px 16px; background: #1c1215; border: 1px solid #3d1f23; border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 13px; color: #f87171; }
-
-/* File list */
+.success-msg { margin-top: 20px; padding: 12px 16px; background: #121c15; border: 1px solid #1f3d23; border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 13px; color: #4ade80; }
 .file-list { margin-top: 16px; }
 .file-row { display: flex; align-items: center; gap: 12px; padding: 12px 16px; background: #15171e; border: 1px solid #2a2d37; border-radius: 10px; margin-bottom: 8px; }
 .file-row .file-icon { font-size: 20px; flex-shrink: 0; }
@@ -37,24 +40,12 @@ select.field-input { appearance: none; background-image: url("data:image/svg+xml
 .file-row select { background: #1a1c25; border: 1px solid #2a2d37; border-radius: 6px; padding: 6px 28px 6px 10px; color: #c9a960; font-family: 'DM Sans', sans-serif; font-size: 12px; outline: none; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='%23c9a960' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 8px center; }
 .file-row .remove-btn { background: none; border: none; color: #5a5d68; cursor: pointer; font-size: 18px; padding: 4px 8px; border-radius: 4px; transition: color 0.2s; }
 .file-row .remove-btn:hover { color: #f87171; }
-
 .add-file-btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 14px; background: transparent; border: 2px dashed #2a2d37; border-radius: 10px; color: #7a7d88; font-family: 'DM Sans', sans-serif; font-size: 13px; cursor: pointer; transition: all 0.2s; margin-top: 8px; }
 .add-file-btn:hover { border-color: #c9a960; color: #c9a960; background: #15171e; }
-
-/* Pipeline steps */
 .pipeline-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
 .pipeline-step { font-family: 'DM Sans', sans-serif; font-size: 12px; padding: 4px 12px; border-radius: 20px; background: #1a1c25; display: flex; align-items: center; }
 .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 8px; }
 .dot-ok { background: #22c55e; } .dot-error { background: #ef4444; } .dot-skipped { background: #f59e0b; }
-
-/* Progress steps */
-.progress-steps { margin-top: 24px; }
-.progress-step { display: flex; align-items: center; gap: 12px; padding: 10px 0; font-family: 'DM Sans', sans-serif; font-size: 13px; color: #5a5d68; border-bottom: 1px solid #1a1c25; }
-.progress-step.active { color: #c9a960; }
-.progress-step.done { color: #22c55e; }
-.progress-step .step-icon { width: 24px; text-align: center; }
-
-/* Result sections */
 .section-card { background: #15171e; border-radius: 12px; padding: 28px 32px; margin-bottom: 16px; border-left: 3px solid transparent; }
 .section-card.highlight { border-left-color: #c9a960; background: #1a1c25; }
 .section-card.meta { background: #12141a; border-left-color: #3b82f6; }
@@ -66,12 +57,10 @@ select.field-input { appearance: none; background-image: url("data:image/svg+xml
 .result-header { font-size: 28px; font-weight: 300; line-height: 1.3; color: #f0f1f4; margin-bottom: 4px; }
 .gold-line { width: 60px; height: 2px; background: linear-gradient(90deg, #c9a960, transparent); margin: 12px 0 32px; }
 .new-btn { display: block; max-width: 300px; margin: 40px auto 0; }
-
-/* Tab bar */
-.tab-bar { display: flex; gap: 4px; margin-bottom: 24px; background: #15171e; border-radius: 10px; padding: 4px; }
-.tab { flex: 1; padding: 10px; text-align: center; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; color: #7a7d88; border-radius: 8px; cursor: pointer; transition: all 0.2s; border: none; background: none; }
-.tab.active { background: #1e2028; color: #c9a960; }
-.tab:hover:not(.active) { color: #e2e4e9; }
+.collapsible { cursor: pointer; padding: 12px 16px; background: #15171e; border: 1px solid #2a2d37; border-radius: 10px; margin-top: 16px; display: flex; justify-content: space-between; align-items: center; font-family: 'DM Sans', sans-serif; font-size: 13px; color: #7a7d88; transition: all 0.2s; }
+.collapsible:hover { border-color: #c9a960; color: #c9a960; }
+.collapsible-content { display: none; padding: 16px; background: #12141a; border: 1px solid #2a2d37; border-top: none; border-radius: 0 0 10px 10px; margin-top: -1px; }
+.collapsible-content.open { display: block; }
 </style>
 </head>
 <body>
@@ -94,11 +83,43 @@ select.field-input { appearance: none; background-image: url("data:image/svg+xml
     <div class="fields">
       <div>
         <div class="field-label">Company Ticker</div>
-        <input class="field-input" id="ticker" value="HEIA" placeholder="e.g. HEIA">
+        <input class="field-input" id="ticker" placeholder="e.g. HEIA, BNZL, DGE">
       </div>
       <div>
         <div class="field-label">Period</div>
         <input class="field-input" id="period" placeholder="e.g. 2025_Q2">
+      </div>
+    </div>
+    <div class="fields">
+      <div>
+        <div class="field-label">Company Name</div>
+        <input class="field-input" id="company-name" placeholder="e.g. Heineken N.V.">
+      </div>
+      <div>
+        <div class="field-label">Sector</div>
+        <input class="field-input" id="sector" placeholder="e.g. Consumer Staples">
+      </div>
+    </div>
+
+    <!-- Thesis (collapsible) -->
+    <div class="collapsible" onclick="toggleThesis()">
+      <span>Investment Thesis (optional — improves analysis)</span>
+      <span id="thesis-arrow">▸</span>
+    </div>
+    <div class="collapsible-content" id="thesis-section">
+      <div class="fields-full">
+        <div>
+          <div class="field-label">Core Thesis</div>
+          <textarea class="field-input" id="thesis-core" placeholder="e.g. Premium global brewer with pricing power and volume recovery tailwinds in emerging markets..."></textarea>
+        </div>
+        <div>
+          <div class="field-label">Key Risks</div>
+          <textarea class="field-input" id="thesis-risks" placeholder="e.g. Consumer downtrading, FX headwinds, regulatory risk..." style="min-height:60px"></textarea>
+        </div>
+        <div>
+          <div class="field-label">Valuation Framework</div>
+          <textarea class="field-input" id="thesis-valuation" placeholder="e.g. DCF with 7.5% WACC, cross-check EV/EBITDA 10-11x..." style="min-height:60px"></textarea>
+        </div>
       </div>
     </div>
 
@@ -113,6 +134,7 @@ select.field-input { appearance: none; background-image: url("data:image/svg+xml
     <button class="submit-btn" id="submit-btn" onclick="submitForm()">Analyse & Synthesise</button>
     <div class="loading" id="loading" style="display:none"></div>
     <div class="error-msg" id="error" style="display:none"></div>
+    <div class="success-msg" id="status" style="display:none"></div>
   </div>
 
   <!-- Results -->
@@ -120,74 +142,113 @@ select.field-input { appearance: none; background-image: url("data:image/svg+xml
 </div>
 
 <script>
-let uploadedFiles = []; // [{file, docType}]
-let pendingFileIndex = -1;
-
+let uploadedFiles = [];
 const hiddenInput = document.getElementById('hidden-file-input');
 
-function addFile() {
-  pendingFileIndex = uploadedFiles.length;
-  hiddenInput.click();
+function toggleThesis() {
+  const el = document.getElementById('thesis-section');
+  const arrow = document.getElementById('thesis-arrow');
+  el.classList.toggle('open');
+  arrow.textContent = el.classList.contains('open') ? '▾' : '▸';
 }
+
+function addFile() { hiddenInput.click(); }
 
 hiddenInput.addEventListener('change', function() {
   const file = this.files[0];
   if (!file) return;
-  // Auto-detect type from filename
   let docType = 'other';
   const name = file.name.toLowerCase();
   if (name.includes('transcript') || name.includes('call')) docType = 'transcript';
   else if (name.includes('broker') || name.includes('note') || name.includes('research')) docType = 'broker_note';
   else if (name.includes('presentation') || name.includes('slides') || name.includes('deck')) docType = 'presentation';
   else if (name.includes('earning') || name.includes('result') || name.includes('release') || name.includes('q1') || name.includes('q2') || name.includes('q3') || name.includes('q4') || name.includes('h1') || name.includes('h2')) docType = 'earnings_release';
-
   uploadedFiles.push({ file, docType });
   this.value = '';
   renderFileList();
 });
 
-function removeFile(idx) {
-  uploadedFiles.splice(idx, 1);
-  renderFileList();
-}
-
-function changeType(idx, val) {
-  uploadedFiles[idx].docType = val;
-}
+function removeFile(idx) { uploadedFiles.splice(idx, 1); renderFileList(); }
+function changeType(idx, val) { uploadedFiles[idx].docType = val; }
 
 function renderFileList() {
   const container = document.getElementById('file-list');
-  const typeLabels = {
-    earnings_release: 'Earnings Release',
-    transcript: 'Transcript',
-    broker_note: 'Broker Note',
-    presentation: 'Presentation',
-    '10-Q': '10-Q',
-    '10-K': '10-K',
-    annual_report: 'Annual Report',
-    other: 'Other',
-  };
-  const icons = {
-    earnings_release: '📊', transcript: '🎙️', broker_note: '📝',
-    presentation: '📑', '10-Q': '📋', '10-K': '📋',
-    annual_report: '📚', other: '📄',
-  };
-
+  const typeLabels = { earnings_release:'Earnings Release', transcript:'Transcript', broker_note:'Broker Note', presentation:'Presentation', '10-Q':'10-Q', '10-K':'10-K', annual_report:'Annual Report', other:'Other' };
+  const icons = { earnings_release:'📊', transcript:'🎙️', broker_note:'📝', presentation:'📑', '10-Q':'📋', '10-K':'📋', annual_report:'📚', other:'📄' };
   let html = '';
   uploadedFiles.forEach((f, i) => {
     const size = (f.file.size / 1024 / 1024).toFixed(1);
-    html += '<div class="file-row">';
-    html += '<div class="file-icon">' + (icons[f.docType] || '📄') + '</div>';
-    html += '<div class="file-info"><div class="file-name">' + esc(f.file.name) + '</div><div class="file-size">' + size + ' MB</div></div>';
-    html += '<select onchange="changeType(' + i + ', this.value)">';
-    Object.keys(typeLabels).forEach(k => {
-      html += '<option value="' + k + '"' + (k === f.docType ? ' selected' : '') + '>' + typeLabels[k] + '</option>';
-    });
-    html += '</select>';
-    html += '<button class="remove-btn" onclick="removeFile(' + i + ')">&times;</button>';
-    html += '</div>';
+    html += '<div class="file-row"><div class="file-icon">' + (icons[f.docType]||'📄') + '</div><div class="file-info"><div class="file-name">' + esc(f.file.name) + '</div><div class="file-size">' + size + ' MB</div></div><select onchange="changeType('+i+',this.value)">';
+    Object.keys(typeLabels).forEach(k => { html += '<option value="'+k+'"'+(k===f.docType?' selected':'')+'>'+typeLabels[k]+'</option>'; });
+    html += '</select><button class="remove-btn" onclick="removeFile('+i+')">&times;</button></div>';
   });
   container.innerHTML = html;
+}
+
+function showError(msg) { document.getElementById('error').textContent = msg; document.getElementById('error').style.display = 'block'; }
+function showStatus(msg) { document.getElementById('status').textContent = msg; document.getElementById('status').style.display = 'block'; }
+
+async function ensureCompanyExists(ticker) {
+  const name = document.getElementById('company-name').value.trim();
+  const sector = document.getElementById('sector').value.trim();
+  
+  // Check if company exists
+  try {
+    const resp = await fetch('/api/v1/companies/' + ticker);
+    if (resp.ok) return true; // already exists
+  } catch(e) {}
+
+  // Create company
+  if (!name) { showError('Company not found. Please enter a company name to create it.'); return false; }
+  
+  try {
+    const resp = await fetch('/api/v1/companies', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ ticker: ticker, name: name, sector: sector || null, coverage_status: 'active' }),
+    });
+    if (!resp.ok) {
+      const err = await resp.json().catch(() => ({}));
+      throw new Error(err.detail || 'Failed to create company');
+    }
+    showStatus('Created company: ' + name + ' (' + ticker + ')');
+  } catch(e) {
+    showError('Failed to create company: ' + e.message);
+    return false;
+  }
+  return true;
+}
+
+async function ensureThesisExists(ticker) {
+  const core = document.getElementById('thesis-core').value.trim();
+  if (!core) return; // no thesis provided, skip
+
+  // Check if thesis exists
+  try {
+    const resp = await fetch('/api/v1/companies/' + ticker + '/thesis');
+    if (resp.ok) {
+      const theses = await resp.json();
+      if (theses.length > 0) return; // already has a thesis
+    }
+  } catch(e) {}
+
+  // Create thesis
+  const risks = document.getElementById('thesis-risks').value.trim();
+  const valuation = document.getElementById('thesis-valuation').value.trim();
+
+  try {
+    const resp = await fetch('/api/v1/companies/' + ticker + '/thesis', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        thesis_date: new Date().toISOString().split('T')[0],
+        core_thesis: core,
+        key_risks: risks || null,
+        valuation_framework: valuation || null,
+      }),
+    });
+    if (resp.ok) showStatus('Investment thesis saved.');
+  } catch(e) {}
 }
 
 async function submitForm() {
@@ -199,212 +260,145 @@ async function submitForm() {
 
   const btn = document.getElementById('submit-btn');
   const loading = document.getElementById('loading');
-  const error = document.getElementById('error');
+  document.getElementById('error').style.display = 'none';
+  document.getElementById('status').style.display = 'none';
 
   btn.disabled = true;
-  btn.textContent = 'Processing…';
-  error.style.display = 'none';
+  btn.textContent = 'Setting up…';
 
-  // Determine endpoint
+  // Ensure company and thesis exist
+  const companyOk = await ensureCompanyExists(ticker);
+  if (!companyOk) { btn.disabled = false; btn.textContent = 'Analyse & Synthesise'; return; }
+  await ensureThesisExists(ticker);
+
+  btn.textContent = 'Processing…';
+
   const useBatch = uploadedFiles.length > 1;
 
   if (useBatch) {
     loading.style.display = 'block';
     loading.textContent = 'Processing ' + uploadedFiles.length + ' documents with specialised prompts, then synthesising — this takes 3–5 minutes…';
-
     const formData = new FormData();
     formData.append('period_label', period);
     formData.append('document_types', uploadedFiles.map(f => f.docType).join(','));
     formData.append('titles', uploadedFiles.map(f => f.file.name).join(','));
-    uploadedFiles.forEach(f => {
-      formData.append('files', f.file);
-    });
-
+    uploadedFiles.forEach(f => { formData.append('files', f.file); });
     try {
-      const resp = await fetch('/api/v1/companies/' + ticker + '/documents/batch-upload', {
-        method: 'POST', body: formData,
-      });
-      if (!resp.ok) {
-        const err = await resp.json().catch(() => ({}));
-        throw new Error(err.detail || 'Server error ' + resp.status);
-      }
+      const resp = await fetch('/api/v1/companies/' + ticker + '/documents/batch-upload', { method: 'POST', body: formData });
+      if (!resp.ok) { const err = await resp.json().catch(()=>({})); throw new Error(err.detail || 'Server error ' + resp.status); }
       const data = await resp.json();
       renderBatchResult(data);
     } catch (e) {
       showError(e.message);
-      btn.disabled = false;
-      btn.textContent = 'Analyse & Synthesise';
-      loading.style.display = 'none';
+      btn.disabled = false; btn.textContent = 'Analyse & Synthesise'; loading.style.display = 'none';
     }
   } else {
-    // Single file — use upload-and-process
     loading.style.display = 'block';
     loading.textContent = 'Uploading and processing — this takes 2–3 minutes…';
-
     const f = uploadedFiles[0];
     const formData = new FormData();
     formData.append('file', f.file);
     formData.append('document_type', f.docType);
     formData.append('period_label', period);
     formData.append('title', f.file.name);
-
     try {
-      const resp = await fetch('/api/v1/companies/' + ticker + '/documents/upload-and-process', {
-        method: 'POST', body: formData,
-      });
-      if (!resp.ok) {
-        const err = await resp.json().catch(() => ({}));
-        throw new Error(err.detail || 'Server error ' + resp.status);
-      }
+      const resp = await fetch('/api/v1/companies/' + ticker + '/documents/upload-and-process', { method: 'POST', body: formData });
+      if (!resp.ok) { const err = await resp.json().catch(()=>({})); throw new Error(err.detail || 'Server error ' + resp.status); }
       const data = await resp.json();
       renderSingleResult(data);
     } catch (e) {
       showError(e.message);
-      btn.disabled = false;
-      btn.textContent = 'Analyse & Synthesise';
-      loading.style.display = 'none';
+      btn.disabled = false; btn.textContent = 'Analyse & Synthesise'; loading.style.display = 'none';
     }
   }
 }
 
-function showError(msg) {
-  const el = document.getElementById('error');
-  el.textContent = msg;
-  el.style.display = 'block';
-}
-
-// ── Render batch (multi-doc synthesis) result ─────────────────
 function renderBatchResult(data) {
   document.getElementById('form-section').style.display = 'none';
   const container = document.getElementById('result-section');
   container.style.display = 'block';
-
   const { company, period, documents_processed, synthesis, thesis_comparison, surprises, ir_questions, per_document_extractions } = data;
-
   let html = '';
-
-  // Header
-  html += '<div class="result-header">' + esc(company?.name || '') + ' (' + esc(company?.ticker || '') + ') — ' + esc(period) + '</div>';
+  html += '<div class="result-header">' + esc(company?.name||'') + ' (' + esc(company?.ticker||'') + ') — ' + esc(period) + '</div>';
   html += '<div class="gold-line"></div>';
-
-  // Documents processed summary
   if (documents_processed?.length) {
-    let docSummary = documents_processed.map(d => {
-      const status = d.steps?.every(s => s.status === 'ok') ? '✓' : '⚠';
-      return status + ' ' + esc(d.filename) + ' (' + d.document_type + ')';
-    }).join('\n');
-    html += card('meta', 'Documents Processed (' + documents_processed.length + ')', docSummary);
+    let ds = documents_processed.map(d => { const s = d.steps?.every(s=>s.status==='ok')?'✓':'⚠'; return s+' '+esc(d.filename)+' ('+d.document_type+')'; }).join('\n');
+    html += card('meta','Documents Processed ('+documents_processed.length+')',ds);
   }
-
-  // Synthesis (the main output)
   if (synthesis && !synthesis.error) {
-    if (synthesis.headline) html += card('synthesis', 'Headline', esc(synthesis.headline));
-    if (synthesis.what_happened) html += card('section', 'What Happened', esc(synthesis.what_happened));
-    if (synthesis.management_message) html += card('section', 'Management Message & Credibility', esc(synthesis.management_message));
-    if (synthesis.what_the_street_thinks) html += card('section', 'What The Street Thinks', esc(synthesis.what_the_street_thinks));
-    if (synthesis.thesis_impact) html += card('section', 'Thesis Impact', esc(synthesis.thesis_impact));
-    if (synthesis.key_debates) html += card('section', 'Key Debates', esc(synthesis.key_debates));
-    if (synthesis.risks_updated) html += card('section', 'Risks Updated', esc(synthesis.risks_updated));
-    if (synthesis.action_items) html += card('section', 'Action Items', esc(synthesis.action_items));
-    if (synthesis.bottom_line) html += card('highlight', 'Bottom Line', esc(synthesis.bottom_line));
-  } else if (synthesis?.error) {
-    html += card('section', 'Synthesis Error', esc(synthesis.error));
-  }
-
-  // Thesis comparison
+    if (synthesis.headline) html += card('synthesis','Headline',esc(synthesis.headline));
+    if (synthesis.what_happened) html += card('section','What Happened',esc(synthesis.what_happened));
+    if (synthesis.management_message) html += card('section','Management Message & Credibility',esc(synthesis.management_message));
+    if (synthesis.what_the_street_thinks) html += card('section','What The Street Thinks',esc(synthesis.what_the_street_thinks));
+    if (synthesis.thesis_impact) html += card('section','Thesis Impact',esc(synthesis.thesis_impact));
+    if (synthesis.key_debates) html += card('section','Key Debates',esc(synthesis.key_debates));
+    if (synthesis.risks_updated) html += card('section','Risks Updated',esc(synthesis.risks_updated));
+    if (synthesis.action_items) html += card('section','Action Items',esc(synthesis.action_items));
+    if (synthesis.bottom_line) html += card('highlight','Bottom Line',esc(synthesis.bottom_line));
+  } else if (synthesis?.error) { html += card('section','Synthesis Error',esc(synthesis.error)); }
   if (thesis_comparison && !thesis_comparison.error) {
-    let t = 'Direction: ' + (thesis_comparison.thesis_direction || '').toUpperCase() + '\n\n' + esc(thesis_comparison.summary || '');
-    if (thesis_comparison.supporting_signals?.length) t += '\n\nSupporting: ' + thesis_comparison.supporting_signals.map(esc).join('. ') + '.';
-    if (thesis_comparison.weakening_signals?.length) t += '\n\nWeakening: ' + thesis_comparison.weakening_signals.map(esc).join('. ') + '.';
-    if (thesis_comparison.new_risks?.length) t += '\n\nNew risks: ' + thesis_comparison.new_risks.map(esc).join('. ') + '.';
-    html += card('section', 'Thesis Comparison', t);
+    let t = 'Direction: '+(thesis_comparison.thesis_direction||'').toUpperCase()+'\n\n'+esc(thesis_comparison.summary||'');
+    if (thesis_comparison.supporting_signals?.length) t += '\n\nSupporting: '+thesis_comparison.supporting_signals.map(esc).join('. ')+'.';
+    if (thesis_comparison.weakening_signals?.length) t += '\n\nWeakening: '+thesis_comparison.weakening_signals.map(esc).join('. ')+'.';
+    if (thesis_comparison.new_risks?.length) t += '\n\nNew risks: '+thesis_comparison.new_risks.map(esc).join('. ')+'.';
+    html += card('section','Thesis Comparison',t);
   }
-
-  // Surprises
   if (surprises?.length) {
-    const st = surprises.map(s => (s.direction === 'positive' ? '↑' : '↓') + ' ' + esc(s.metric_or_topic) + ' (' + s.magnitude + '): ' + esc(s.description)).join('\n\n');
-    html += card('section', 'Surprises', st);
+    html += card('section','Surprises',surprises.map(s=>(s.direction==='positive'?'↑':'↓')+' '+esc(s.metric_or_topic)+' ('+s.magnitude+'): '+esc(s.description)).join('\n\n'));
   }
-
-  // IR Questions
   if (ir_questions?.length) {
-    const qt = ir_questions.map((q, i) => (i+1) + '. ' + esc(q.topic) + '\n' + esc(q.question) + '\nRationale: ' + esc(q.rationale)).join('\n\n');
-    html += card('section', 'Suggested IR Questions', qt);
+    html += card('section','Suggested IR Questions',ir_questions.map((q,i)=>(i+1)+'. '+esc(q.topic)+'\n'+esc(q.question)+'\nRationale: '+esc(q.rationale)).join('\n\n'));
   }
-
-  // Per-document extraction samples
-  if (per_document_extractions && Object.keys(per_document_extractions).length > 0) {
-    let extText = '';
-    for (const [fname, ext] of Object.entries(per_document_extractions)) {
-      extText += esc(fname) + ' (' + ext.type + '): ' + ext.items_count + ' items extracted\n';
-    }
-    html += card('meta', 'Per-Document Extraction Summary', extText.trim());
+  if (per_document_extractions && Object.keys(per_document_extractions).length) {
+    let et = ''; for (const [fn,ex] of Object.entries(per_document_extractions)) { et += esc(fn)+' ('+ex.type+'): '+ex.items_count+' items\n'; }
+    html += card('meta','Extraction Summary',et.trim());
   }
-
   html += '<div style="margin-top:40px;text-align:center"><button class="submit-btn new-btn" onclick="resetForm()">New Analysis</button></div>';
   container.innerHTML = html;
 }
 
-// ── Render single-doc result ──────────────────────────────────
 function renderSingleResult(data) {
   document.getElementById('form-section').style.display = 'none';
   const container = document.getElementById('result-section');
   container.style.display = 'block';
-
   const { company, period, classification, briefing, thesis_comparison, surprises, ir_questions, metrics, guidance } = data;
-  const metricCount = (metrics || []).length;
-  const guidanceCount = (guidance || []).length;
-
+  const mc = (metrics||[]).length, gc = (guidance||[]).length;
   let html = '';
-  html += '<div class="result-header">' + esc(company?.name || '') + ' (' + esc(company?.ticker || '') + ') — ' + esc(period) + '</div>';
+  html += '<div class="result-header">'+esc(company?.name||'')+' ('+esc(company?.ticker||'')+') — '+esc(period)+'</div>';
   html += '<div class="gold-line"></div>';
-
-  if (classification) {
-    html += card('meta', 'Document Classification', 'Identified as ' + esc(classification.document_type) + '. ' + metricCount + ' metrics and ' + guidanceCount + ' guidance items extracted.');
-  }
+  if (classification) html += card('meta','Document Classification','Identified as '+esc(classification.document_type)+'. '+mc+' metrics and '+gc+' guidance items extracted.');
   if (briefing) {
-    html += card('section', 'What Happened', esc(briefing.what_happened));
-    html += card('section', 'What Changed', esc(briefing.what_changed));
-    html += card('section', 'Thesis Status', esc(briefing.thesis_status));
-    html += card('section', 'Risks', esc(briefing.risks));
-    html += card('highlight', 'Bottom Line', esc(briefing.bottom_line));
+    html += card('section','What Happened',esc(briefing.what_happened));
+    html += card('section','What Changed',esc(briefing.what_changed));
+    html += card('section','Thesis Status',esc(briefing.thesis_status));
+    html += card('section','Risks',esc(briefing.risks));
+    html += card('highlight','Bottom Line',esc(briefing.bottom_line));
   }
   if (thesis_comparison) {
-    let t = 'Direction: ' + (thesis_comparison.thesis_direction || '').toUpperCase() + '\n\n' + esc(thesis_comparison.summary || '');
-    html += card('section', 'Thesis Comparison', t);
+    html += card('section','Thesis Comparison','Direction: '+(thesis_comparison.thesis_direction||'').toUpperCase()+'\n\n'+esc(thesis_comparison.summary||''));
   }
   if (surprises?.length) {
-    const st = surprises.map(s => (s.direction === 'positive' ? '↑' : '↓') + ' ' + esc(s.metric_or_topic) + ': ' + esc(s.description)).join('\n\n');
-    html += card('section', 'Surprises', st);
+    html += card('section','Surprises',surprises.map(s=>(s.direction==='positive'?'↑':'↓')+' '+esc(s.metric_or_topic)+': '+esc(s.description)).join('\n\n'));
   }
   if (ir_questions?.length) {
-    const qt = ir_questions.map((q, i) => (i+1) + '. ' + esc(q.topic) + '\n' + esc(q.question)).join('\n\n');
-    html += card('section', 'IR Questions', qt);
+    html += card('section','IR Questions',ir_questions.map((q,i)=>(i+1)+'. '+esc(q.topic)+'\n'+esc(q.question)).join('\n\n'));
   }
-
   html += '<div style="margin-top:40px;text-align:center"><button class="submit-btn new-btn" onclick="resetForm()">New Analysis</button></div>';
   container.innerHTML = html;
 }
 
-function card(type, title, content) {
-  return '<div class="section-card ' + type + '"><div class="section-title">' + esc(title) + '</div><div class="section-content">' + content + '</div></div>';
-}
-
-function esc(s) {
-  if (!s) return '';
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
-
+function card(type,title,content) { return '<div class="section-card '+type+'"><div class="section-title">'+esc(title)+'</div><div class="section-content">'+content+'</div></div>'; }
+function esc(s) { if(!s) return ''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 function resetForm() {
-  document.getElementById('form-section').style.display = 'block';
-  document.getElementById('result-section').style.display = 'none';
-  document.getElementById('submit-btn').disabled = false;
-  document.getElementById('submit-btn').textContent = 'Analyse & Synthesise';
-  document.getElementById('loading').style.display = 'none';
-  document.getElementById('error').style.display = 'none';
-  uploadedFiles = [];
-  renderFileList();
-  document.getElementById('period').value = '';
+  document.getElementById('form-section').style.display='block';
+  document.getElementById('result-section').style.display='none';
+  document.getElementById('submit-btn').disabled=false;
+  document.getElementById('submit-btn').textContent='Analyse & Synthesise';
+  document.getElementById('loading').style.display='none';
+  document.getElementById('error').style.display='none';
+  document.getElementById('status').style.display='none';
+  uploadedFiles=[]; renderFileList();
+  document.getElementById('period').value='';
 }
 </script>
 </body>
