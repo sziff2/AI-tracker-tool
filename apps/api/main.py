@@ -27,12 +27,9 @@ async def lifespan(app: FastAPI):
     """Create tables on startup and run migrations."""
     async with async_engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
-        # Add file_content column if it doesn't exist (migration for existing DBs)
-        await conn.execute(
-            __import__("sqlalchemy").text(
-                "ALTER TABLE documents ADD COLUMN IF NOT EXISTS file_content BYTEA"
-            )
-        )
+        sa_text = __import__("sqlalchemy").text
+        await conn.execute(sa_text("ALTER TABLE documents ADD COLUMN IF NOT EXISTS file_content BYTEA"))
+        await conn.execute(sa_text("ALTER TABLE research_outputs ADD COLUMN IF NOT EXISTS content_json TEXT"))
     yield
     await async_engine.dispose()
 
