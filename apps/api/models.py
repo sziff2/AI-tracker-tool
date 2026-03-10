@@ -150,8 +150,9 @@ class ResearchOutput(Base, TimestampMixin):
     id = Column(UUID(as_uuid=True), primary_key=True, default=new_uuid)
     company_id = Column(UUID(as_uuid=True), ForeignKey("companies.id"), nullable=False)
     period_label = Column(Text)
-    output_type = Column(Text)             # briefing | ir_questions | thesis_drift
+    output_type = Column(Text)             # briefing | ir_questions | thesis_drift | synthesis | full_analysis
     content_path = Column(Text)
+    content_json = Column(Text)            # store full JSON output
     review_status = Column(Text, default="draft")  # draft | reviewed | approved
     approved_by = Column(Text)
 
