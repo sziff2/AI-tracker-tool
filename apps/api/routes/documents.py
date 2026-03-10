@@ -216,6 +216,22 @@ async def upload_and_process(
     except Exception as e:
         output["pipeline_status"].append({"step": "thesis_drift", "status": "error", "detail": str(e)[:200]})
 
+    # Save full analysis to DB for history
+    try:
+        import json as _save_json
+        ro = ResearchOutput(
+            id=uuid.uuid4(),
+            company_id=company.id,
+            period_label=period_label,
+            output_type="full_analysis",
+            content_json=_save_json.dumps(output, default=str),
+            review_status="draft",
+        )
+        db.add(ro)
+        await db.commit()
+    except Exception:
+        pass
+
     return output
 
 
@@ -415,6 +431,21 @@ async def batch_upload_and_process(
     try:
         questions = await generate_ir_questions(db, company.id, period_label)
         output["ir_questions"] = [q.model_dump() for q in questions]
+    except Exception:
+        pass
+
+    # Save full analysis to DB for history
+    try:
+        ro = ResearchOutput(
+            id=uuid.uuid4(),
+            company_id=company.id,
+            period_label=period_label,
+            output_type="batch_synthesis",
+            content_json=_json.dumps(output, default=str),
+            review_status="draft",
+        )
+        db.add(ro)
+        await db.commit()
     except Exception:
         pass
 
