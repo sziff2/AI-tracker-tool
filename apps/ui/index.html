@@ -6,61 +6,67 @@
 <title>Research CoWork Agent</title>
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,600;1,6..72,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { min-height: 100vh; background: #0f1117; color: #e2e4e9; font-family: 'Newsreader', Georgia, serif; }
-.header { border-bottom: 1px solid #1e2028; padding: 20px 32px; display: flex; align-items: center; gap: 12px; }
-.header-icon { width: 32px; height: 32px; border-radius: 8px; background: linear-gradient(135deg, #c9a960, #a88932); display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700; color: #0f1117; font-family: 'DM Sans', sans-serif; }
-.header-title { font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 15px; color: #e2e4e9; }
-.header-sub { font-family: 'DM Sans', sans-serif; font-size: 11px; color: #5a5d68; letter-spacing: 0.5px; }
-.container { max-width: 800px; margin: 0 auto; padding: 40px 24px 80px; }
-h1 { font-size: 32px; font-weight: 300; line-height: 1.3; color: #f0f1f4; margin-bottom: 8px; }
-.subtitle { font-family: 'DM Sans', sans-serif; font-size: 14px; color: #6b6e7a; margin-bottom: 40px; line-height: 1.6; }
-.field-label { font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase; color: #7a7d88; margin-bottom: 6px; }
-.field-input, textarea.field-input { width: 100%; background: #15171e; border: 1px solid #2a2d37; border-radius: 8px; padding: 10px 14px; color: #e2e4e9; font-family: 'DM Sans', sans-serif; font-size: 14px; outline: none; transition: border-color 0.2s; }
-.field-input:focus { border-color: #c9a960; }
-textarea.field-input { resize: vertical; min-height: 80px; line-height: 1.5; }
-select.field-input { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%237a7d88' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; }
-.fields { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 24px; }
-.fields-full { display: grid; grid-template-columns: 1fr; gap: 16px; margin-top: 16px; }
-.submit-btn { width: 100%; padding: 14px; margin-top: 28px; background: linear-gradient(135deg, #c9a960, #a88932); color: #0f1117; border: none; border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600; cursor: pointer; letter-spacing: 0.5px; transition: all 0.2s; }
-.submit-btn:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 4px 20px rgba(201,169,96,0.3); }
-.submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-.secondary-btn { width: 100%; padding: 12px; margin-top: 12px; background: transparent; border: 1px solid #2a2d37; border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; color: #7a7d88; cursor: pointer; transition: all 0.2s; }
-.secondary-btn:hover { border-color: #c9a960; color: #c9a960; }
-.loading { text-align: center; margin-top: 32px; font-family: 'DM Sans', sans-serif; font-size: 14px; color: #c9a960; animation: pulse 2s ease-in-out infinite; }
-@keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
-.error-msg { margin-top: 20px; padding: 12px 16px; background: #1c1215; border: 1px solid #3d1f23; border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 13px; color: #f87171; }
-.success-msg { margin-top: 20px; padding: 12px 16px; background: #121c15; border: 1px solid #1f3d23; border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 13px; color: #4ade80; }
-.file-list { margin-top: 16px; }
-.file-row { display: flex; align-items: center; gap: 12px; padding: 12px 16px; background: #15171e; border: 1px solid #2a2d37; border-radius: 10px; margin-bottom: 8px; }
-.file-row .file-icon { font-size: 20px; flex-shrink: 0; }
-.file-row .file-info { flex: 1; min-width: 0; }
-.file-row .file-name { font-family: 'DM Sans', sans-serif; font-size: 13px; color: #e2e4e9; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.file-row .file-size { font-family: 'DM Sans', sans-serif; font-size: 11px; color: #5a5d68; }
-.file-row select { background: #1a1c25; border: 1px solid #2a2d37; border-radius: 6px; padding: 6px 28px 6px 10px; color: #c9a960; font-family: 'DM Sans', sans-serif; font-size: 12px; outline: none; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='%23c9a960' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 8px center; }
-.file-row .remove-btn { background: none; border: none; color: #5a5d68; cursor: pointer; font-size: 18px; padding: 4px 8px; border-radius: 4px; transition: color 0.2s; }
-.file-row .remove-btn:hover { color: #f87171; }
-.add-file-btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 14px; background: transparent; border: 2px dashed #2a2d37; border-radius: 10px; color: #7a7d88; font-family: 'DM Sans', sans-serif; font-size: 13px; cursor: pointer; transition: all 0.2s; margin-top: 8px; }
-.add-file-btn:hover { border-color: #c9a960; color: #c9a960; background: #15171e; }
-.pipeline-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
-.pipeline-step { font-family: 'DM Sans', sans-serif; font-size: 12px; padding: 4px 12px; border-radius: 20px; background: #1a1c25; display: flex; align-items: center; }
-.dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 8px; }
-.dot-ok { background: #22c55e; } .dot-error { background: #ef4444; } .dot-skipped { background: #f59e0b; }
-.section-card { background: #15171e; border-radius: 12px; padding: 28px 32px; margin-bottom: 16px; border-left: 3px solid transparent; }
-.section-card.highlight { border-left-color: #c9a960; background: #1a1c25; }
-.section-card.meta { background: #12141a; border-left-color: #3b82f6; }
-.section-card.synthesis { border-left-color: #c9a960; background: #1a1c25; }
-.section-title { font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase; color: #7a7d88; margin-bottom: 12px; }
-.section-card.highlight .section-title, .section-card.synthesis .section-title { color: #c9a960; }
-.section-content { font-size: 14.5px; line-height: 1.75; color: #c4c6ce; white-space: pre-wrap; }
-.section-card.highlight .section-content { font-size: 16px; color: #f0f1f4; }
-.result-header { font-size: 28px; font-weight: 300; line-height: 1.3; color: #f0f1f4; margin-bottom: 4px; }
-.gold-line { width: 60px; height: 2px; background: linear-gradient(90deg, #c9a960, transparent); margin: 12px 0 32px; }
-.new-btn { display: block; max-width: 300px; margin: 40px auto 0; }
-.collapsible { cursor: pointer; padding: 12px 16px; background: #15171e; border: 1px solid #2a2d37; border-radius: 10px; margin-top: 16px; display: flex; justify-content: space-between; align-items: center; font-family: 'DM Sans', sans-serif; font-size: 13px; color: #7a7d88; transition: all 0.2s; }
-.collapsible:hover { border-color: #c9a960; color: #c9a960; }
-.collapsible-content { display: none; padding: 16px; background: #12141a; border: 1px solid #2a2d37; border-top: none; border-radius: 0 0 10px 10px; margin-top: -1px; }
-.collapsible-content.open { display: block; }
+*{box-sizing:border-box;margin:0;padding:0}
+body{min-height:100vh;background:#0f1117;color:#e2e4e9;font-family:'Newsreader',Georgia,serif}
+.header{border-bottom:1px solid #1e2028;padding:20px 32px;display:flex;align-items:center;gap:12px}
+.header-icon{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#c9a960,#a88932);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:#0f1117;font-family:'DM Sans',sans-serif}
+.header-title{font-family:'DM Sans',sans-serif;font-weight:600;font-size:15px;color:#e2e4e9}
+.header-sub{font-family:'DM Sans',sans-serif;font-size:11px;color:#5a5d68;letter-spacing:.5px}
+.header-nav{margin-left:auto;display:flex;gap:8px}
+.nav-btn{background:none;border:1px solid #2a2d37;border-radius:8px;padding:8px 16px;font-family:'DM Sans',sans-serif;font-size:13px;color:#7a7d88;cursor:pointer;transition:all .2s}
+.nav-btn:hover,.nav-btn.active{border-color:#c9a960;color:#c9a960}
+.container{max-width:800px;margin:0 auto;padding:40px 24px 80px}
+h1{font-size:32px;font-weight:300;line-height:1.3;color:#f0f1f4;margin-bottom:8px}
+.subtitle{font-family:'DM Sans',sans-serif;font-size:14px;color:#6b6e7a;margin-bottom:40px;line-height:1.6}
+.field-label{font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:#7a7d88;margin-bottom:6px}
+.field-input,textarea.field-input{width:100%;background:#15171e;border:1px solid #2a2d37;border-radius:8px;padding:10px 14px;color:#e2e4e9;font-family:'DM Sans',sans-serif;font-size:14px;outline:none;transition:border-color .2s}
+.field-input:focus{border-color:#c9a960}
+textarea.field-input{resize:vertical;min-height:80px;line-height:1.5}
+select.field-input{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%237a7d88' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:24px}
+.fields-full{display:grid;grid-template-columns:1fr;gap:16px;margin-top:16px}
+.submit-btn{width:100%;padding:14px;margin-top:28px;background:linear-gradient(135deg,#c9a960,#a88932);color:#0f1117;border:none;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;cursor:pointer;letter-spacing:.5px;transition:all .2s}
+.submit-btn:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 4px 20px rgba(201,169,96,.3)}
+.submit-btn:disabled{opacity:.5;cursor:not-allowed}
+.loading{text-align:center;margin-top:32px;font-family:'DM Sans',sans-serif;font-size:14px;color:#c9a960;animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.error-msg{margin-top:20px;padding:12px 16px;background:#1c1215;border:1px solid #3d1f23;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;color:#f87171}
+.success-msg{margin-top:20px;padding:12px 16px;background:#121c15;border:1px solid #1f3d23;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;color:#4ade80}
+.file-list{margin-top:16px}
+.file-row{display:flex;align-items:center;gap:12px;padding:12px 16px;background:#15171e;border:1px solid #2a2d37;border-radius:10px;margin-bottom:8px}
+.file-row .file-icon{font-size:20px;flex-shrink:0}
+.file-row .file-info{flex:1;min-width:0}
+.file-row .file-name{font-family:'DM Sans',sans-serif;font-size:13px;color:#e2e4e9;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.file-row .file-size{font-family:'DM Sans',sans-serif;font-size:11px;color:#5a5d68}
+.file-row select{background:#1a1c25;border:1px solid #2a2d37;border-radius:6px;padding:6px 28px 6px 10px;color:#c9a960;font-family:'DM Sans',sans-serif;font-size:12px;outline:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='%23c9a960' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center}
+.file-row .remove-btn{background:none;border:none;color:#5a5d68;cursor:pointer;font-size:18px;padding:4px 8px;border-radius:4px;transition:color .2s}
+.file-row .remove-btn:hover{color:#f87171}
+.add-file-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:14px;background:transparent;border:2px dashed #2a2d37;border-radius:10px;color:#7a7d88;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;transition:all .2s;margin-top:8px}
+.add-file-btn:hover{border-color:#c9a960;color:#c9a960;background:#15171e}
+.section-card{background:#15171e;border-radius:12px;padding:28px 32px;margin-bottom:16px;border-left:3px solid transparent}
+.section-card.highlight{border-left-color:#c9a960;background:#1a1c25}
+.section-card.meta{background:#12141a;border-left-color:#3b82f6}
+.section-card.synthesis{border-left-color:#c9a960;background:#1a1c25}
+.section-title{font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:#7a7d88;margin-bottom:12px}
+.section-card.highlight .section-title,.section-card.synthesis .section-title{color:#c9a960}
+.section-content{font-size:14.5px;line-height:1.75;color:#c4c6ce;white-space:pre-wrap}
+.section-card.highlight .section-content{font-size:16px;color:#f0f1f4}
+.result-header{font-size:28px;font-weight:300;line-height:1.3;color:#f0f1f4;margin-bottom:4px}
+.gold-line{width:60px;height:2px;background:linear-gradient(90deg,#c9a960,transparent);margin:12px 0 32px}
+.new-btn{display:block;max-width:300px;margin:40px auto 0}
+.collapsible{cursor:pointer;padding:12px 16px;background:#15171e;border:1px solid #2a2d37;border-radius:10px;margin-top:16px;display:flex;justify-content:space-between;align-items:center;font-family:'DM Sans',sans-serif;font-size:13px;color:#7a7d88;transition:all .2s}
+.collapsible:hover{border-color:#c9a960;color:#c9a960}
+.collapsible-content{display:none;padding:16px;background:#12141a;border:1px solid #2a2d37;border-top:none;border-radius:0 0 10px 10px;margin-top:-1px}
+.collapsible-content.open{display:block}
+.history-item{padding:16px;background:#15171e;border:1px solid #2a2d37;border-radius:10px;margin-bottom:12px;cursor:pointer;transition:all .2s}
+.history-item:hover{border-color:#c9a960}
+.history-period{font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;color:#e2e4e9}
+.history-meta{font-family:'DM Sans',sans-serif;font-size:12px;color:#5a5d68;margin-top:4px}
+.history-docs{font-family:'DM Sans',sans-serif;font-size:12px;color:#7a7d88;margin-top:6px}
+.pipeline-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px}
+.pipeline-step{font-family:'DM Sans',sans-serif;font-size:12px;padding:4px 12px;border-radius:20px;background:#1a1c25;display:flex;align-items:center}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:8px}
+.dot-ok{background:#22c55e}.dot-error{background:#ef4444}.dot-skipped{background:#f59e0b}
 </style>
 </head>
 <body>
@@ -71,80 +77,166 @@ select.field-input { appearance: none; background-image: url("data:image/svg+xml
     <div class="header-title">Research CoWork Agent</div>
     <div class="header-sub">Investment Research Intelligence</div>
   </div>
+  <div class="header-nav">
+    <button class="nav-btn active" id="nav-new" onclick="showPage('new')">New Analysis</button>
+    <button class="nav-btn" id="nav-history" onclick="showPage('history')">History</button>
+  </div>
 </div>
 
 <div class="container">
-  <!-- Upload form -->
-  <div id="form-section">
-    <h1>Upload documents</h1>
-    <p class="subtitle">Add your earnings release, transcript, broker notes, and presentations for the same period. Each is analysed with a tailored prompt, then everything is synthesised into one opinionated briefing.</p>
+  <!-- NEW ANALYSIS PAGE -->
+  <div id="page-new">
+    <div id="form-section">
+      <h1>Upload documents</h1>
+      <p class="subtitle">Add your earnings release, transcript, broker notes, and presentations. Each is analysed with a tailored prompt, then synthesised into one opinionated briefing.</p>
 
-    <!-- Company & Period -->
-    <div class="fields">
-      <div>
-        <div class="field-label">Company Ticker</div>
-        <input class="field-input" id="ticker" placeholder="e.g. HEIA, BNZL, DGE">
-      </div>
-      <div>
-        <div class="field-label">Period</div>
-        <input class="field-input" id="period" placeholder="e.g. 2025_Q2">
-      </div>
-    </div>
-    <div class="fields">
-      <div>
-        <div class="field-label">Company Name</div>
-        <input class="field-input" id="company-name" placeholder="e.g. Heineken N.V.">
-      </div>
-      <div>
-        <div class="field-label">Sector</div>
-        <input class="field-input" id="sector" placeholder="e.g. Consumer Staples">
-      </div>
-    </div>
-
-    <!-- Thesis (collapsible) -->
-    <div class="collapsible" onclick="toggleThesis()">
-      <span>Investment Thesis (optional — improves analysis)</span>
-      <span id="thesis-arrow">▸</span>
-    </div>
-    <div class="collapsible-content" id="thesis-section">
-      <div class="fields-full">
+      <div class="fields">
         <div>
-          <div class="field-label">Core Thesis</div>
-          <textarea class="field-input" id="thesis-core" placeholder="e.g. Premium global brewer with pricing power and volume recovery tailwinds in emerging markets..."></textarea>
+          <div class="field-label">Company</div>
+          <select class="field-input" id="company-select" onchange="onCompanySelect()">
+            <option value="">— Select or type new —</option>
+          </select>
         </div>
         <div>
-          <div class="field-label">Key Risks</div>
-          <textarea class="field-input" id="thesis-risks" placeholder="e.g. Consumer downtrading, FX headwinds, regulatory risk..." style="min-height:60px"></textarea>
-        </div>
-        <div>
-          <div class="field-label">Valuation Framework</div>
-          <textarea class="field-input" id="thesis-valuation" placeholder="e.g. DCF with 7.5% WACC, cross-check EV/EBITDA 10-11x..." style="min-height:60px"></textarea>
+          <div class="field-label">Period</div>
+          <input class="field-input" id="period" placeholder="e.g. 2025_Q2">
         </div>
       </div>
+      <div class="fields" id="new-company-fields" style="display:none">
+        <div>
+          <div class="field-label">Ticker</div>
+          <input class="field-input" id="ticker" placeholder="e.g. BNZL">
+        </div>
+        <div>
+          <div class="field-label">Company Name</div>
+          <input class="field-input" id="company-name" placeholder="e.g. Bunzl plc">
+        </div>
+        <div>
+          <div class="field-label">Sector</div>
+          <input class="field-input" id="sector" placeholder="e.g. Industrials">
+        </div>
+        <div>
+          <div class="field-label">Country</div>
+          <input class="field-input" id="country" placeholder="e.g. United Kingdom">
+        </div>
+      </div>
+
+      <div class="collapsible" onclick="toggleThesis()">
+        <span>Investment Thesis (optional — improves analysis)</span>
+        <span id="thesis-arrow">▸</span>
+      </div>
+      <div class="collapsible-content" id="thesis-section">
+        <div class="fields-full">
+          <div><div class="field-label">Core Thesis</div><textarea class="field-input" id="thesis-core" placeholder="e.g. Premium global brewer with pricing power..."></textarea></div>
+          <div><div class="field-label">Key Risks</div><textarea class="field-input" id="thesis-risks" placeholder="e.g. Consumer downtrading, FX headwinds..." style="min-height:60px"></textarea></div>
+          <div><div class="field-label">Valuation Framework</div><textarea class="field-input" id="thesis-valuation" placeholder="e.g. DCF with 7.5% WACC..." style="min-height:60px"></textarea></div>
+        </div>
+      </div>
+
+      <div class="field-label" style="margin-top:28px">Documents</div>
+      <div class="file-list" id="file-list"></div>
+      <button class="add-file-btn" onclick="addFile()"><span style="font-size:18px">+</span> Add document</button>
+      <input type="file" id="hidden-file-input" accept=".pdf,.docx,.txt" style="display:none">
+
+      <button class="submit-btn" id="submit-btn" onclick="submitForm()">Analyse & Synthesise</button>
+      <div class="loading" id="loading" style="display:none"></div>
+      <div class="error-msg" id="error" style="display:none"></div>
+      <div class="success-msg" id="status" style="display:none"></div>
     </div>
-
-    <!-- File list -->
-    <div class="field-label" style="margin-top:28px">Documents</div>
-    <div class="file-list" id="file-list"></div>
-    <button class="add-file-btn" onclick="addFile()">
-      <span style="font-size:18px">+</span> Add document
-    </button>
-    <input type="file" id="hidden-file-input" accept=".pdf,.docx,.txt" style="display:none">
-
-    <button class="submit-btn" id="submit-btn" onclick="submitForm()">Analyse & Synthesise</button>
-    <div class="loading" id="loading" style="display:none"></div>
-    <div class="error-msg" id="error" style="display:none"></div>
-    <div class="success-msg" id="status" style="display:none"></div>
+    <div id="result-section" style="display:none"></div>
   </div>
 
-  <!-- Results -->
-  <div id="result-section" style="display:none"></div>
+  <!-- HISTORY PAGE -->
+  <div id="page-history" style="display:none">
+    <h1>Research History</h1>
+    <p class="subtitle">View past analyses by company.</p>
+    <div>
+      <div class="field-label">Company</div>
+      <select class="field-input" id="history-company" onchange="loadHistory()">
+        <option value="">— Select company —</option>
+      </select>
+    </div>
+    <div id="history-content" style="margin-top:24px"></div>
+    <div id="history-detail" style="display:none"></div>
+  </div>
 </div>
 
 <script>
 let uploadedFiles = [];
+let companiesCache = [];
 const hiddenInput = document.getElementById('hidden-file-input');
 
+// ── Page navigation ─────────────────────────────────────────
+function showPage(page) {
+  document.getElementById('page-new').style.display = page === 'new' ? 'block' : 'none';
+  document.getElementById('page-history').style.display = page === 'history' ? 'block' : 'none';
+  document.getElementById('nav-new').classList.toggle('active', page === 'new');
+  document.getElementById('nav-history').classList.toggle('active', page === 'history');
+  if (page === 'history') loadCompanyDropdowns();
+}
+
+// ── Load companies for dropdowns ────────────────────────────
+async function loadCompanyDropdowns() {
+  try {
+    const resp = await fetch('/api/v1/companies-list');
+    if (!resp.ok) return;
+    companiesCache = await resp.json();
+  } catch(e) { return; }
+  
+  const selects = ['company-select', 'history-company'];
+  selects.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const current = el.value;
+    el.innerHTML = '<option value="">— Select or type new —</option>';
+    if (id === 'history-company') el.innerHTML = '<option value="">— Select company —</option>';
+    companiesCache.forEach(c => {
+      const opt = document.createElement('option');
+      opt.value = c.ticker;
+      opt.textContent = c.name + ' (' + c.ticker + ')';
+      el.appendChild(opt);
+    });
+    // Add "new company" option to the analysis dropdown
+    if (id === 'company-select') {
+      const opt = document.createElement('option');
+      opt.value = '__new__';
+      opt.textContent = '+ Add new company';
+      el.appendChild(opt);
+    }
+    el.value = current;
+  });
+}
+
+function onCompanySelect() {
+  const val = document.getElementById('company-select').value;
+  const newFields = document.getElementById('new-company-fields');
+  if (val === '__new__') {
+    newFields.style.display = 'grid';
+    document.getElementById('ticker').value = '';
+    document.getElementById('company-name').value = '';
+    document.getElementById('sector').value = '';
+    document.getElementById('thesis-core').value = '';
+    document.getElementById('thesis-risks').value = '';
+    document.getElementById('thesis-valuation').value = '';
+  } else {
+    newFields.style.display = 'none';
+    // Auto-populate from cache
+    const c = companiesCache.find(x => x.ticker === val);
+    if (c) {
+      document.getElementById('ticker').value = c.ticker;
+      document.getElementById('company-name').value = c.name;
+      document.getElementById('sector').value = c.sector || '';
+    }
+  }
+}
+
+function getSelectedTicker() {
+  const sel = document.getElementById('company-select').value;
+  if (sel && sel !== '__new__') return sel;
+  return document.getElementById('ticker').value.trim().toUpperCase();
+}
+
+// ── Thesis toggle ───────────────────────────────────────────
 function toggleThesis() {
   const el = document.getElementById('thesis-section');
   const arrow = document.getElementById('thesis-arrow');
@@ -152,239 +244,214 @@ function toggleThesis() {
   arrow.textContent = el.classList.contains('open') ? '▾' : '▸';
 }
 
+// ── File management ─────────────────────────────────────────
 function addFile() { hiddenInput.click(); }
-
 hiddenInput.addEventListener('change', function() {
-  const file = this.files[0];
-  if (!file) return;
+  const file = this.files[0]; if (!file) return;
   let docType = 'other';
   const name = file.name.toLowerCase();
   if (name.includes('transcript') || name.includes('call')) docType = 'transcript';
   else if (name.includes('broker') || name.includes('note') || name.includes('research')) docType = 'broker_note';
   else if (name.includes('presentation') || name.includes('slides') || name.includes('deck')) docType = 'presentation';
-  else if (name.includes('earning') || name.includes('result') || name.includes('release') || name.includes('q1') || name.includes('q2') || name.includes('q3') || name.includes('q4') || name.includes('h1') || name.includes('h2')) docType = 'earnings_release';
-  uploadedFiles.push({ file, docType });
-  this.value = '';
-  renderFileList();
+  else if (name.includes('earning') || name.includes('result') || name.includes('release') || name.match(/[qh][1-4]/)) docType = 'earnings_release';
+  uploadedFiles.push({ file, docType }); this.value = ''; renderFileList();
 });
-
 function removeFile(idx) { uploadedFiles.splice(idx, 1); renderFileList(); }
 function changeType(idx, val) { uploadedFiles[idx].docType = val; }
-
 function renderFileList() {
-  const container = document.getElementById('file-list');
-  const typeLabels = { earnings_release:'Earnings Release', transcript:'Transcript', broker_note:'Broker Note', presentation:'Presentation', '10-Q':'10-Q', '10-K':'10-K', annual_report:'Annual Report', other:'Other' };
-  const icons = { earnings_release:'📊', transcript:'🎙️', broker_note:'📝', presentation:'📑', '10-Q':'📋', '10-K':'📋', annual_report:'📚', other:'📄' };
-  let html = '';
-  uploadedFiles.forEach((f, i) => {
-    const size = (f.file.size / 1024 / 1024).toFixed(1);
-    html += '<div class="file-row"><div class="file-icon">' + (icons[f.docType]||'📄') + '</div><div class="file-info"><div class="file-name">' + esc(f.file.name) + '</div><div class="file-size">' + size + ' MB</div></div><select onchange="changeType('+i+',this.value)">';
-    Object.keys(typeLabels).forEach(k => { html += '<option value="'+k+'"'+(k===f.docType?' selected':'')+'>'+typeLabels[k]+'</option>'; });
-    html += '</select><button class="remove-btn" onclick="removeFile('+i+')">&times;</button></div>';
+  const c = document.getElementById('file-list');
+  const tl = {earnings_release:'Earnings Release',transcript:'Transcript',broker_note:'Broker Note',presentation:'Presentation','10-Q':'10-Q','10-K':'10-K',annual_report:'Annual Report',other:'Other'};
+  const ic = {earnings_release:'📊',transcript:'🎙️',broker_note:'📝',presentation:'📑','10-Q':'📋','10-K':'📋',annual_report:'📚',other:'📄'};
+  let h = '';
+  uploadedFiles.forEach((f,i) => {
+    const sz = (f.file.size/1024/1024).toFixed(1);
+    h += '<div class="file-row"><div class="file-icon">'+(ic[f.docType]||'📄')+'</div><div class="file-info"><div class="file-name">'+esc(f.file.name)+'</div><div class="file-size">'+sz+' MB</div></div><select onchange="changeType('+i+',this.value)">';
+    Object.keys(tl).forEach(k => { h += '<option value="'+k+'"'+(k===f.docType?' selected':'')+'>'+tl[k]+'</option>'; });
+    h += '</select><button class="remove-btn" onclick="removeFile('+i+')">&times;</button></div>';
   });
-  container.innerHTML = html;
+  c.innerHTML = h;
 }
 
-function showError(msg) { document.getElementById('error').textContent = msg; document.getElementById('error').style.display = 'block'; }
-function showStatus(msg) { document.getElementById('status').textContent = msg; document.getElementById('status').style.display = 'block'; }
+// ── Submit ───────────────────────────────────────────────────
+function showError(m) { document.getElementById('error').textContent=m; document.getElementById('error').style.display='block'; }
+function showStatus(m) { document.getElementById('status').textContent=m; document.getElementById('status').style.display='block'; }
 
 async function ensureCompanyExists(ticker) {
   const name = document.getElementById('company-name').value.trim();
   const sector = document.getElementById('sector').value.trim();
-  
-  // Check if company exists
+  const country = document.getElementById('country')?.value?.trim() || '';
+  try { const r = await fetch('/api/v1/companies/'+ticker); if (r.ok) return true; } catch(e) {}
+  if (!name) { showError('Company not found. Please enter a name to create it.'); return false; }
   try {
-    const resp = await fetch('/api/v1/companies/' + ticker);
-    if (resp.ok) return true; // already exists
-  } catch(e) {}
-
-  // Create company
-  if (!name) { showError('Company not found. Please enter a company name to create it.'); return false; }
-  
-  try {
-    const resp = await fetch('/api/v1/companies', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({ ticker: ticker, name: name, sector: sector || null, coverage_status: 'active' }),
-    });
-    if (!resp.ok) {
-      const err = await resp.json().catch(() => ({}));
-      throw new Error(err.detail || 'Failed to create company');
-    }
-    showStatus('Created company: ' + name + ' (' + ticker + ')');
-  } catch(e) {
-    showError('Failed to create company: ' + e.message);
-    return false;
-  }
+    const r = await fetch('/api/v1/companies', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ticker,name,sector:sector||null,country:country||null,coverage_status:'active'})});
+    if (!r.ok) { const e = await r.json().catch(()=>({})); throw new Error(e.detail||'Failed'); }
+    showStatus('Created: '+name+' ('+ticker+')');
+    await loadCompanyDropdowns();
+  } catch(e) { showError('Failed to create company: '+e.message); return false; }
   return true;
 }
 
 async function ensureThesisExists(ticker) {
   const core = document.getElementById('thesis-core').value.trim();
-  if (!core) return; // no thesis provided, skip
-
-  // Check if thesis exists
-  try {
-    const resp = await fetch('/api/v1/companies/' + ticker + '/thesis');
-    if (resp.ok) {
-      const theses = await resp.json();
-      if (theses.length > 0) return; // already has a thesis
-    }
-  } catch(e) {}
-
-  // Create thesis
+  if (!core) return;
+  try { const r = await fetch('/api/v1/companies/'+ticker+'/thesis'); if (r.ok) { const t = await r.json(); if (t.length > 0) return; } } catch(e) {}
   const risks = document.getElementById('thesis-risks').value.trim();
-  const valuation = document.getElementById('thesis-valuation').value.trim();
-
+  const val = document.getElementById('thesis-valuation').value.trim();
   try {
-    const resp = await fetch('/api/v1/companies/' + ticker + '/thesis', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({
-        thesis_date: new Date().toISOString().split('T')[0],
-        core_thesis: core,
-        key_risks: risks || null,
-        valuation_framework: valuation || null,
-      }),
-    });
-    if (resp.ok) showStatus('Investment thesis saved.');
+    await fetch('/api/v1/companies/'+ticker+'/thesis', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({thesis_date:new Date().toISOString().split('T')[0],core_thesis:core,key_risks:risks||null,valuation_framework:val||null})});
+    showStatus('Thesis saved.');
   } catch(e) {}
 }
 
 async function submitForm() {
-  const ticker = document.getElementById('ticker').value.trim().toUpperCase();
+  const ticker = getSelectedTicker();
   const period = document.getElementById('period').value.trim();
-
-  if (!ticker || !period) { showError('Please fill in ticker and period.'); return; }
+  if (!ticker || !period) { showError('Please select a company and enter a period.'); return; }
   if (uploadedFiles.length === 0) { showError('Please add at least one document.'); return; }
-
   const btn = document.getElementById('submit-btn');
   const loading = document.getElementById('loading');
-  document.getElementById('error').style.display = 'none';
-  document.getElementById('status').style.display = 'none';
-
-  btn.disabled = true;
-  btn.textContent = 'Setting up…';
-
-  // Ensure company and thesis exist
-  const companyOk = await ensureCompanyExists(ticker);
-  if (!companyOk) { btn.disabled = false; btn.textContent = 'Analyse & Synthesise'; return; }
+  document.getElementById('error').style.display='none';
+  document.getElementById('status').style.display='none';
+  btn.disabled=true; btn.textContent='Setting up…';
+  const ok = await ensureCompanyExists(ticker);
+  if (!ok) { btn.disabled=false; btn.textContent='Analyse & Synthesise'; return; }
   await ensureThesisExists(ticker);
-
-  btn.textContent = 'Processing…';
-
+  btn.textContent='Processing…';
   const useBatch = uploadedFiles.length > 1;
-
   if (useBatch) {
-    loading.style.display = 'block';
-    loading.textContent = 'Processing ' + uploadedFiles.length + ' documents with specialised prompts, then synthesising — this takes 3–5 minutes…';
-    const formData = new FormData();
-    formData.append('period_label', period);
-    formData.append('document_types', uploadedFiles.map(f => f.docType).join(','));
-    formData.append('titles', uploadedFiles.map(f => f.file.name).join(','));
-    uploadedFiles.forEach(f => { formData.append('files', f.file); });
+    loading.style.display='block'; loading.textContent='Processing '+uploadedFiles.length+' documents — 3–5 minutes…';
+    const fd = new FormData();
+    fd.append('period_label',period);
+    fd.append('document_types',uploadedFiles.map(f=>f.docType).join(','));
+    fd.append('titles',uploadedFiles.map(f=>f.file.name).join(','));
+    uploadedFiles.forEach(f=>{fd.append('files',f.file);});
     try {
-      const resp = await fetch('/api/v1/companies/' + ticker + '/documents/batch-upload', { method: 'POST', body: formData });
-      if (!resp.ok) { const err = await resp.json().catch(()=>({})); throw new Error(err.detail || 'Server error ' + resp.status); }
-      const data = await resp.json();
-      renderBatchResult(data);
-    } catch (e) {
-      showError(e.message);
-      btn.disabled = false; btn.textContent = 'Analyse & Synthesise'; loading.style.display = 'none';
-    }
+      const r = await fetch('/api/v1/companies/'+ticker+'/documents/batch-upload',{method:'POST',body:fd});
+      if (!r.ok) { const e = await r.json().catch(()=>({})); throw new Error(e.detail||'Server error '+r.status); }
+      renderBatchResult(await r.json());
+    } catch(e) { showError(e.message); btn.disabled=false; btn.textContent='Analyse & Synthesise'; loading.style.display='none'; }
   } else {
-    loading.style.display = 'block';
-    loading.textContent = 'Uploading and processing — this takes 2–3 minutes…';
-    const f = uploadedFiles[0];
-    const formData = new FormData();
-    formData.append('file', f.file);
-    formData.append('document_type', f.docType);
-    formData.append('period_label', period);
-    formData.append('title', f.file.name);
+    loading.style.display='block'; loading.textContent='Uploading and processing — 2–3 minutes…';
+    const f=uploadedFiles[0], fd=new FormData();
+    fd.append('file',f.file); fd.append('document_type',f.docType); fd.append('period_label',period); fd.append('title',f.file.name);
     try {
-      const resp = await fetch('/api/v1/companies/' + ticker + '/documents/upload-and-process', { method: 'POST', body: formData });
-      if (!resp.ok) { const err = await resp.json().catch(()=>({})); throw new Error(err.detail || 'Server error ' + resp.status); }
-      const data = await resp.json();
-      renderSingleResult(data);
-    } catch (e) {
-      showError(e.message);
-      btn.disabled = false; btn.textContent = 'Analyse & Synthesise'; loading.style.display = 'none';
-    }
+      const r = await fetch('/api/v1/companies/'+ticker+'/documents/upload-and-process',{method:'POST',body:fd});
+      if (!r.ok) { const e = await r.json().catch(()=>({})); throw new Error(e.detail||'Server error '+r.status); }
+      renderSingleResult(await r.json());
+    } catch(e) { showError(e.message); btn.disabled=false; btn.textContent='Analyse & Synthesise'; loading.style.display='none'; }
   }
 }
 
-function renderBatchResult(data) {
-  document.getElementById('form-section').style.display = 'none';
-  const container = document.getElementById('result-section');
-  container.style.display = 'block';
-  const { company, period, documents_processed, synthesis, thesis_comparison, surprises, ir_questions, per_document_extractions } = data;
-  let html = '';
-  html += '<div class="result-header">' + esc(company?.name||'') + ' (' + esc(company?.ticker||'') + ') — ' + esc(period) + '</div>';
-  html += '<div class="gold-line"></div>';
-  if (documents_processed?.length) {
-    let ds = documents_processed.map(d => { const s = d.steps?.every(s=>s.status==='ok')?'✓':'⚠'; return s+' '+esc(d.filename)+' ('+d.document_type+')'; }).join('\n');
-    html += card('meta','Documents Processed ('+documents_processed.length+')',ds);
+// ── History ──────────────────────────────────────────────────
+async function loadHistory() {
+  const ticker = document.getElementById('history-company').value;
+  const content = document.getElementById('history-content');
+  const detail = document.getElementById('history-detail');
+  detail.style.display='none';
+  if (!ticker) { content.innerHTML=''; return; }
+  content.innerHTML='<div class="loading">Loading history…</div>';
+  try {
+    const r = await fetch('/api/v1/companies/'+ticker+'/history');
+    if (!r.ok) throw new Error('Failed to load');
+    const data = await r.json();
+    renderHistory(data);
+  } catch(e) { content.innerHTML='<div class="error-msg">'+esc(e.message)+'</div>'; }
+}
+
+function renderHistory(data) {
+  const content = document.getElementById('history-content');
+  let h = '';
+  // Company header
+  h += '<div class="section-card meta"><div class="section-title">'+esc(data.company.name)+' ('+esc(data.company.ticker)+')</div>';
+  if (data.thesis) h += '<div class="section-content" style="font-size:13px">Thesis: '+esc(data.thesis.core_thesis||'').substring(0,200)+'…</div>';
+  else h += '<div class="section-content" style="font-size:13px;color:#f59e0b">No thesis on file</div>';
+  h += '</div>';
+
+  if (!data.periods || data.periods.length === 0) {
+    h += '<div style="text-align:center;padding:40px;color:#5a5d68;font-family:DM Sans,sans-serif;font-size:14px">No analyses yet for this company.</div>';
+    content.innerHTML = h; return;
   }
+
+  data.periods.forEach(p => {
+    const analyses = p.analyses || [];
+    const fullAnalysis = analyses.find(a => a.output_type === 'full_analysis' || a.output_type === 'batch_synthesis');
+    const docCount = (p.documents||[]).length;
+    const docTypes = (p.documents||[]).map(d=>d.document_type).join(', ');
+    const date = fullAnalysis?.created_at ? new Date(fullAnalysis.created_at).toLocaleDateString() : '';
+
+    h += '<div class="history-item" onclick="viewAnalysis(\''+esc(fullAnalysis?.id||'')+'\','+JSON.stringify(fullAnalysis?.content||null).replace(/'/g,"\\'")+')\">';
+    h += '<div class="history-period">'+esc(p.period)+'</div>';
+    h += '<div class="history-meta">'+p.metrics_count+' metrics extracted · '+analyses.length+' outputs · '+date+'</div>';
+    h += '<div class="history-docs">'+docCount+' documents: '+esc(docTypes)+'</div>';
+    h += '</div>';
+  });
+  content.innerHTML = h;
+}
+
+function viewAnalysis(id, content) {
+  if (!content) return;
+  const detail = document.getElementById('history-detail');
+  document.getElementById('history-content').style.display='none';
+  detail.style.display='block';
+
+  // Render the saved analysis
+  if (content.synthesis) renderBatchInto(detail, content);
+  else if (content.briefing) renderSingleInto(detail, content);
+  else detail.innerHTML = '<div class="section-card"><div class="section-content">'+esc(JSON.stringify(content,null,2))+'</div></div>';
+
+  detail.innerHTML += '<div style="margin-top:40px;text-align:center"><button class="submit-btn new-btn" onclick="backToHistory()">Back to History</button></div>';
+}
+
+function backToHistory() {
+  document.getElementById('history-content').style.display='block';
+  document.getElementById('history-detail').style.display='none';
+}
+
+function renderBatchInto(el, data) {
+  const {company,period,synthesis,thesis_comparison,surprises,ir_questions} = data;
+  let h = '<div class="result-header">'+esc(company?.name||'')+' ('+esc(company?.ticker||'')+') — '+esc(period)+'</div><div class="gold-line"></div>';
   if (synthesis && !synthesis.error) {
-    if (synthesis.headline) html += card('synthesis','Headline',esc(synthesis.headline));
-    if (synthesis.what_happened) html += card('section','What Happened',esc(synthesis.what_happened));
-    if (synthesis.management_message) html += card('section','Management Message & Credibility',esc(synthesis.management_message));
-    if (synthesis.what_the_street_thinks) html += card('section','What The Street Thinks',esc(synthesis.what_the_street_thinks));
-    if (synthesis.thesis_impact) html += card('section','Thesis Impact',esc(synthesis.thesis_impact));
-    if (synthesis.key_debates) html += card('section','Key Debates',esc(synthesis.key_debates));
-    if (synthesis.risks_updated) html += card('section','Risks Updated',esc(synthesis.risks_updated));
-    if (synthesis.action_items) html += card('section','Action Items',esc(synthesis.action_items));
-    if (synthesis.bottom_line) html += card('highlight','Bottom Line',esc(synthesis.bottom_line));
-  } else if (synthesis?.error) { html += card('section','Synthesis Error',esc(synthesis.error)); }
-  if (thesis_comparison && !thesis_comparison.error) {
-    let t = 'Direction: '+(thesis_comparison.thesis_direction||'').toUpperCase()+'\n\n'+esc(thesis_comparison.summary||'');
-    if (thesis_comparison.supporting_signals?.length) t += '\n\nSupporting: '+thesis_comparison.supporting_signals.map(esc).join('. ')+'.';
-    if (thesis_comparison.weakening_signals?.length) t += '\n\nWeakening: '+thesis_comparison.weakening_signals.map(esc).join('. ')+'.';
-    if (thesis_comparison.new_risks?.length) t += '\n\nNew risks: '+thesis_comparison.new_risks.map(esc).join('. ')+'.';
-    html += card('section','Thesis Comparison',t);
+    if (synthesis.headline) h+=card('synthesis','Headline',esc(synthesis.headline));
+    if (synthesis.what_happened) h+=card('section','What Happened',esc(synthesis.what_happened));
+    if (synthesis.management_message) h+=card('section','Management Message',esc(synthesis.management_message));
+    if (synthesis.what_the_street_thinks) h+=card('section','Street View',esc(synthesis.what_the_street_thinks));
+    if (synthesis.thesis_impact) h+=card('section','Thesis Impact',esc(synthesis.thesis_impact));
+    if (synthesis.key_debates) h+=card('section','Key Debates',esc(synthesis.key_debates));
+    if (synthesis.risks_updated) h+=card('section','Risks',esc(synthesis.risks_updated));
+    if (synthesis.action_items) h+=card('section','Action Items',esc(synthesis.action_items));
+    if (synthesis.bottom_line) h+=card('highlight','Bottom Line',esc(synthesis.bottom_line));
   }
-  if (surprises?.length) {
-    html += card('section','Surprises',surprises.map(s=>(s.direction==='positive'?'↑':'↓')+' '+esc(s.metric_or_topic)+' ('+s.magnitude+'): '+esc(s.description)).join('\n\n'));
+  if (ir_questions?.length) h+=card('section','IR Questions',ir_questions.map((q,i)=>(i+1)+'. '+esc(q.topic)+'\n'+esc(q.question)).join('\n\n'));
+  el.innerHTML = h;
+}
+
+function renderSingleInto(el, data) {
+  const {company,period,briefing,thesis_comparison,surprises,ir_questions} = data;
+  let h = '<div class="result-header">'+esc(company?.name||'')+' ('+esc(company?.ticker||'')+') — '+esc(period)+'</div><div class="gold-line"></div>';
+  if (briefing) {
+    h+=card('section','What Happened',esc(briefing.what_happened));
+    h+=card('section','What Changed',esc(briefing.what_changed));
+    h+=card('section','Thesis Status',esc(briefing.thesis_status));
+    h+=card('section','Risks',esc(briefing.risks));
+    h+=card('highlight','Bottom Line',esc(briefing.bottom_line));
   }
-  if (ir_questions?.length) {
-    html += card('section','Suggested IR Questions',ir_questions.map((q,i)=>(i+1)+'. '+esc(q.topic)+'\n'+esc(q.question)+'\nRationale: '+esc(q.rationale)).join('\n\n'));
-  }
-  if (per_document_extractions && Object.keys(per_document_extractions).length) {
-    let et = ''; for (const [fn,ex] of Object.entries(per_document_extractions)) { et += esc(fn)+' ('+ex.type+'): '+ex.items_count+' items\n'; }
-    html += card('meta','Extraction Summary',et.trim());
-  }
-  html += '<div style="margin-top:40px;text-align:center"><button class="submit-btn new-btn" onclick="resetForm()">New Analysis</button></div>';
-  container.innerHTML = html;
+  if (ir_questions?.length) h+=card('section','IR Questions',ir_questions.map((q,i)=>(i+1)+'. '+esc(q.topic)+'\n'+esc(q.question)).join('\n\n'));
+  el.innerHTML = h;
+}
+
+// ── Render results (new analysis) ───────────────────────────
+function renderBatchResult(data) {
+  document.getElementById('form-section').style.display='none';
+  const c=document.getElementById('result-section'); c.style.display='block';
+  renderBatchInto(c, data);
+  c.innerHTML+='<div style="margin-top:40px;text-align:center"><button class="submit-btn new-btn" onclick="resetForm()">New Analysis</button></div>';
 }
 
 function renderSingleResult(data) {
-  document.getElementById('form-section').style.display = 'none';
-  const container = document.getElementById('result-section');
-  container.style.display = 'block';
-  const { company, period, classification, briefing, thesis_comparison, surprises, ir_questions, metrics, guidance } = data;
-  const mc = (metrics||[]).length, gc = (guidance||[]).length;
-  let html = '';
-  html += '<div class="result-header">'+esc(company?.name||'')+' ('+esc(company?.ticker||'')+') — '+esc(period)+'</div>';
-  html += '<div class="gold-line"></div>';
-  if (classification) html += card('meta','Document Classification','Identified as '+esc(classification.document_type)+'. '+mc+' metrics and '+gc+' guidance items extracted.');
-  if (briefing) {
-    html += card('section','What Happened',esc(briefing.what_happened));
-    html += card('section','What Changed',esc(briefing.what_changed));
-    html += card('section','Thesis Status',esc(briefing.thesis_status));
-    html += card('section','Risks',esc(briefing.risks));
-    html += card('highlight','Bottom Line',esc(briefing.bottom_line));
-  }
-  if (thesis_comparison) {
-    html += card('section','Thesis Comparison','Direction: '+(thesis_comparison.thesis_direction||'').toUpperCase()+'\n\n'+esc(thesis_comparison.summary||''));
-  }
-  if (surprises?.length) {
-    html += card('section','Surprises',surprises.map(s=>(s.direction==='positive'?'↑':'↓')+' '+esc(s.metric_or_topic)+': '+esc(s.description)).join('\n\n'));
-  }
-  if (ir_questions?.length) {
-    html += card('section','IR Questions',ir_questions.map((q,i)=>(i+1)+'. '+esc(q.topic)+'\n'+esc(q.question)).join('\n\n'));
-  }
-  html += '<div style="margin-top:40px;text-align:center"><button class="submit-btn new-btn" onclick="resetForm()">New Analysis</button></div>';
-  container.innerHTML = html;
+  document.getElementById('form-section').style.display='none';
+  const c=document.getElementById('result-section'); c.style.display='block';
+  renderSingleInto(c, data);
+  c.innerHTML+='<div style="margin-top:40px;text-align:center"><button class="submit-btn new-btn" onclick="resetForm()">New Analysis</button></div>';
 }
 
 function card(type,title,content) { return '<div class="section-card '+type+'"><div class="section-title">'+esc(title)+'</div><div class="section-content">'+content+'</div></div>'; }
@@ -400,6 +467,9 @@ function resetForm() {
   uploadedFiles=[]; renderFileList();
   document.getElementById('period').value='';
 }
+
+// ── Init ─────────────────────────────────────────────────────
+loadCompanyDropdowns();
 </script>
 </body>
 </html>
