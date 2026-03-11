@@ -172,3 +172,38 @@ class ReviewQueueItem(Base, TimestampMixin):
     priority = Column(Text, default="normal")  # low | normal | high | critical
     assigned_to = Column(Text)
     status = Column(Text, default="open")      # open | approved | rejected | edited
+
+
+# ─────────────────────────────────────────────────────────────────
+# Tracked KPIs — the metrics an analyst wants to monitor per company
+# ─────────────────────────────────────────────────────────────────
+class TrackedKPI(Base, TimestampMixin):
+    __tablename__ = "tracked_kpis"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=new_uuid)
+    company_id = Column(UUID(as_uuid=True), ForeignKey("companies.id"), nullable=False)
+    kpi_name = Column(Text, nullable=False)          # e.g. "Revenue organic growth"
+    unit = Column(Text)                               # e.g. "%" or "EUR_M"
+    display_order = Column(Integer, default=0)
+
+    company = relationship("Company")
+    scores = relationship("KPIScore", back_populates="tracked_kpi", lazy="selectin")
+
+
+# ─────────────────────────────────────────────────────────────────
+# KPI Scores — actual values and analyst scores per period
+# ─────────────────────────────────────────────────────────────────
+class KPIScore(Base, TimestampMixin):
+    __tablename__ = "kpi_scores"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=new_uuid)
+    tracked_kpi_id = Column(UUID(as_uuid=True), ForeignKey("tracked_kpis.id"), nullable=False)
+    company_id = Column(UUID(as_uuid=True), ForeignKey("companies.id"), nullable=False)
+    period_label = Column(Text, nullable=False)       # e.g. "2025_Q2"
+    value = Column(Numeric)                            # extracted or manual value
+    value_text = Column(Text)                          # text representation
+    score = Column(Integer)                            # analyst score 1-5
+    comment = Column(Text)                             # analyst comment
+
+    tracked_kpi = relationship("TrackedKPI", back_populates="scores")
+    company = relationship("Company")
