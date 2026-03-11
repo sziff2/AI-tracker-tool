@@ -207,26 +207,53 @@ async function loadCompanyDropdowns() {
   });
 }
 
-function onCompanySelect() {
+async function onCompanySelect() {
   const val = document.getElementById('company-select').value;
   const newFields = document.getElementById('new-company-fields');
+  const thesisSection = document.getElementById('thesis-section');
+  const thesisArrow = document.getElementById('thesis-arrow');
+
   if (val === '__new__') {
     newFields.style.display = 'grid';
     document.getElementById('ticker').value = '';
     document.getElementById('company-name').value = '';
     document.getElementById('sector').value = '';
+    document.getElementById('country').value = '';
     document.getElementById('thesis-core').value = '';
     document.getElementById('thesis-risks').value = '';
     document.getElementById('thesis-valuation').value = '';
-  } else {
+    thesisSection.classList.remove('open');
+    thesisArrow.textContent = '▸';
+  } else if (val) {
     newFields.style.display = 'none';
-    // Auto-populate from cache
     const c = companiesCache.find(x => x.ticker === val);
     if (c) {
       document.getElementById('ticker').value = c.ticker;
       document.getElementById('company-name').value = c.name;
       document.getElementById('sector').value = c.sector || '';
     }
+    // Fetch and populate thesis
+    try {
+      const r = await fetch('/api/v1/companies/' + val + '/thesis');
+      if (r.ok) {
+        const theses = await r.json();
+        const active = theses.find(t => t.active) || theses[0];
+        if (active) {
+          document.getElementById('thesis-core').value = active.core_thesis || '';
+          document.getElementById('thesis-risks').value = active.key_risks || '';
+          document.getElementById('thesis-valuation').value = active.valuation_framework || '';
+          // Auto-open thesis section so user can see and edit
+          thesisSection.classList.add('open');
+          thesisArrow.textContent = '▾';
+        } else {
+          document.getElementById('thesis-core').value = '';
+          document.getElementById('thesis-risks').value = '';
+          document.getElementById('thesis-valuation').value = '';
+          thesisSection.classList.remove('open');
+          thesisArrow.textContent = '▸';
+        }
+      }
+    } catch(e) {}
   }
 }
 
@@ -294,12 +321,21 @@ async function ensureCompanyExists(ticker) {
 async function ensureThesisExists(ticker) {
   const core = document.getElementById('thesis-core').value.trim();
   if (!core) return;
-  try { const r = await fetch('/api/v1/companies/'+ticker+'/thesis'); if (r.ok) { const t = await r.json(); if (t.length > 0) return; } } catch(e) {}
+  
+  // Always save/update the thesis — user may have edited it
   const risks = document.getElementById('thesis-risks').value.trim();
   const val = document.getElementById('thesis-valuation').value.trim();
   try {
-    await fetch('/api/v1/companies/'+ticker+'/thesis', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({thesis_date:new Date().toISOString().split('T')[0],core_thesis:core,key_risks:risks||null,valuation_framework:val||null})});
-    showStatus('Thesis saved.');
+    await fetch('/api/v1/companies/'+ticker+'/thesis', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        thesis_date: new Date().toISOString().split('T')[0],
+        core_thesis: core,
+        key_risks: risks || null,
+        valuation_framework: val || null
+      })
+    });
   } catch(e) {}
 }
 
